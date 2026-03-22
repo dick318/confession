@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🇩🇪 德国生存指南</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{min-height:100vh;background:#0d1117;font-family:"PingFang SC","Microsoft YaHei",sans-serif;color:#e6edf3;overflow-x:hidden}
+.hero{text-align:center;padding:60px 20px 20px;position:relative;z-index:1}
+.hero h1{font-size:38px;background:linear-gradient(90deg,#ffd700,#ff6b35,#ffd700);background-size:200%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:shimmer 3s linear infinite}
+@keyframes shimmer{0%{background-position:0%}100%{background-position:200%}}
+.hero p{color:#8b949e;margin-top:8px;font-size:15px}
+
+.container{max-width:720px;margin:0 auto;padding:20px;position:relative;z-index:1}
+
+.card{background:rgba(22,27,34,0.9);border:1px solid #30363d;border-radius:16px;padding:28px;margin-bottom:20px;transition:all 0.3s;cursor:pointer;position:relative;overflow:hidden}
+.card:hover{border-color:#58a6ff;transform:translateY(-2px);box-shadow:0 8px 30px rgba(88,166,255,0.1)}
+.card::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;border-radius:4px 0 0 4px}
+.card.red::before{background:#f85149}
+.card.yellow::before{background:#d29922}
+.card.blue::before{background:#58a6ff}
+.card.green::before{background:#3fb950}
+.card.purple::before{background:#bc8cff}
+.card.orange::before{background:#f0883e}
+
+.card .tag{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;margin-bottom:12px}
+.card.red .tag{background:rgba(248,81,73,0.15);color:#f85149}
+.card.yellow .tag{background:rgba(210,153,34,0.15);color:#d29922}
+.card.blue .tag{background:rgba(88,166,255,0.15);color:#58a6ff}
+.card.green .tag{background:rgba(63,185,80,0.15);color:#3fb950}
+.card.purple .tag{background:rgba(188,140,255,0.15);color:#bc8cff}
+.card.orange .tag{background:rgba(240,136,62,0.15);color:#f0883e}
+
+.card h3{font-size:20px;margin-bottom:10px}
+.card .desc{color:#8b949e;font-size:14px;line-height:1.8}
+.card .quote{margin-top:14px;padding:12px 16px;background:rgba(255,255,255,0.03);border-radius:10px;border-left:3px solid #30363d;font-style:italic;color:#8b949e;font-size:13px}
+.card .emoji-big{font-size:48px;text-align:center;margin-bottom:12px}
+.card .hidden-content{display:none;margin-top:14px;padding-top:14px;border-top:1px solid #21262d}
+.card .hidden-content.show{display:block;animation:slide 0.3s ease}
+@keyframes slide{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+
+.tip-text{color:#c9d1d9;font-size:14px;line-height:1.9}
+.tip-text li{margin-bottom:6px}
+
+.section-title{font-size:22px;margin:40px 0 20px;padding-left:16px;border-left:4px solid #58a6ff;color:#e6edf3}
+
+.progress{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,#58a6ff,#bc8cff);z-index:100;transition:width 0.1s}
+
+.footer{text-align:center;padding:40px 20px;color:#484f58;font-size:13px;position:relative;z-index:1}
+
+/* Floating */
+.float{position:fixed;pointer-events:none;z-index:0;font-size:24px;opacity:0.06;animation:floatUp linear infinite}
+@keyframes floatUp{0%{transform:translateY(100vh) rotate(0)}100%{transform:translateY(-10vh) rotate(360deg)}}
+
+@media(max-width:600px){.hero h1{font-size:26px}.container{padding:12px}.card{padding:20px}}
+</style>
+</head>
+<body>
+
+<div class="progress" id="progress"></div>
+
+<div id="floaters"></div>
+
+<div class="hero">
+  <h1>🇩🇪 德国生存指南</h1>
+  <p>在德国活下来的每一天都是胜利 · 点击卡片展开攻略</p>
+</div>
+
+<div class="container">
+
+  <div class="section-title">🏛️ 行政篇</div>
+
+  <div class="card red" onclick="toggle(this)">
+    <span class="tag">💀 BOSS级副本</span>
+    <div class="emoji-big">🏢</div>
+    <h3>Ausländerbehörde 外管局历险记</h3>
+    <div class="desc">你以为预约到了就完了？天真。这是一场耐心、运气和德语水平的终极考验。</div>
+    <div class="hidden-content">
+      <ul class="tip-text">
+        <li>📅 提前3个月预约，晚了约到明年</li>
+        <li>📁 材料复印3份，原件带好，别问为什么</li>
+        <li>⏰ 早到不让你进，迟到重新约，刚好 = 迟到</li>
+        <li>🗣️ 工作人员全程德语，微笑是最好的翻译</li>
+        <li>💳 带够现金，有些只收现金（2024年了还这样）</li>
+        <li>🧘 全程保持佛系，生气只会让进度更慢</li>
+      </ul>
+      <div class="quote">"我等了4个小时，进去5分钟办完，出来发现停车费比签证费还贵。" —— 不知名留学生</div>
+    </div>
+  </div>
+
+  <div class="card yellow" onclick="toggle(this)">
+    <span class="tag">⚠️ 噩梦</span>
+    <div class="emoji-big">📮</div>
+    <h3>Anmeldung 注册地址</h3>
+    <div class="desc">来德国第一件事，不是倒时差，是去注册。不注册 = 你不存在。</div>
+    <div class="hidden-content">
+      <ul class="tip-text">
+        <li>🏠 入住14天内必须Anmeldung，超过罚款</li>
+        <li>📄 需要房东签字的 Wohnungsgeberbestätigung</li>
+        <li>📂 护照 + 签证 + 表格（提前网上下载填好）</li>
+        <li>🔄 搬家也要重新注册，是的每次都要</li>
+        <li>💡 注册完才能开银行账户、签手机合同、办保险</li>
+      </ul>
+      <div class="quote">"Wohnungsgeberbestätigung 这个词我念了三天才学会。"</div>
+    </div>
+  </div>
+
+  <div class="section-title">🛒 生活篇</div>
+
+  <div class="card blue" onclick="toggle(this)">
+    <span class="tag">🚨 每周警告</span>
+    <div class="emoji-big">🏪</div>
+    <h3>周日！超市关门！全部！</h3>
+    <div class="desc">如果你周六忘了买东西，周日只能靠冰箱里的半根黄瓜和希望活着。</div>
+    <div class="hidden-content">
+      <ul class="tip-text">
+        <li>🛒 周六下午必须囤货，这是铁律</li>
+        <li>⛽ 唯一希望：加油站超市（价格翻倍，选择减半）</li>
+        <li>🍕 外卖是周日的救命稻草，但配送可能要2小时</li>
+        <li>📅 注意！很多商店20:00就关门了</li>
+        <li>🎄 圣诞前连续放假好几天，提前囤一周的食物</li>
+      </ul>
+      <div class="quote">"第一次经历德国周日，我站在关门前的REWE门口哭了。"</div>
+    </div>
+  </div>
+
+  <div class="card green" onclick="toggle(this)">
+    <span class="tag">🧮 高数现场</span>
+    <div class="emoji-big">💶</div>
+    <h3>付款时的数学考试</h3>
+    <div class="desc">德国人对现金的执念超过你对论文DDL的执念。</div>
+    <div class="hidden-content">
+      <ul class="tip-text">
+        <li>💳 很多小店只收现金，大型超市才刷卡</li>
+        <li>🪙 准备一个零钱包，硬币多到让你崩溃</li>
+        <li>🔢 付款时精确到分，店员会等你凑零钱</li>
+        <li>🏦 推荐 N26 或 Commerzbank 开户</li>
+        <li>📱 PayPal 在德国超好用，绑卡必备</li>
+      </ul>
+      <div class="quote">"买个3.99€的东西，掏出了5€，店员问我有没有1分钱。"</div>
+    </div>
+  </div>
+
+  <div class="section-title">🚆 出行篇</div>
+
+  <div class="card purple" onclick="toggle(this)">
+    <span class="tag">🎲 开盲盒</span>
+    <div class="emoji-big">🚂</div>
+    <h3>Deutsche Bahn 德铁の日常</h3>
+    <div class="desc">准点是惊喜，晚点是常态，取消是生活。</div>
+    <div class="hidden-content">
+      <ul class="tip-text">
+        <li>📱 必装 DB Navigator App，实时查晚点</li>
+        <li>🎫 Deutschlandticket 49€/月，全德公共交通通坐</li>
+        <li>⏰ 永远提前一班车出发，给自己留buffer</li>
+        <li>🔄 学会看替代公交（SEV），晚点后全靠它</li>
+        <li>💺 长途用 Flixbus 或提前买 Supersparpreis</li>
+        <li>📱 推荐 App：DB Navigator, Citymapper, Google Maps</li>
+      </ul>
+      <div class="quote">"在德国坐火车像开盲盒，你永远不知道今天是晚点10分钟还是直接取消。"</div>
+    </div>
+  </div>
+
+  <div class="section-title">🏠 居住篇</div>
+
+  <div class="card orange" onclick="toggle(this)">
+    <span class="tag">😱 重头戏</span>
+    <div class="emoji-big">🏘️</div>
+    <h3>找房大作战</h3>
+    <div class="desc">在德国找到房的难度，约等于博士毕业。</div>
+    <div class="hidden-content">
+      <ul class="tip-text">
+        <li>🔍 WG-Gesucht.de 是找房神器，每天刷</li>
+        <li>📝 申请信要写自我介绍（德语加分），像求职一样</li>
+        <li>💰 押金通常是3个月冷租（Kaltmiete）</li>
+        <li>🧹 看房时穿体面，房东会"面试"你</li>
+        <li>📋 签合同前检查 Nebenkosten（附加费用）明细</li>
+        <li>🗑️ 学会垃圾分类！塑料/纸/生物/残余，分错被邻居教育</li>
+      </ul>
+      <div class="quote">"我写了50份申请，参加了20次看房，终于在第51次成功了。"</div>
+    </div>
+  </div>
+
+  <div class="section-title">🌡️ 天气篇</div>
+
+  <div class="card blue" onclick="toggle(this)">
+    <span class="tag">☀️ 冬天限定</span>
+    <div class="emoji-big">🌧️</div>
+    <h3>德国の冬天</h3>
+    <div class="desc">下午3点天黑，连续阴天两个月，你会理解为什么德国人爱喝啤酒。</div>
+    <div class="hidden-content">
+      <ul class="tip-text">
+        <li>💡 买个光疗灯（Tageslichtlampe），防抑郁神器</li>
+        <li>💊 补充维生素D，冬天日照严重不足</li>
+        <li>🧥 保暖内衣 + 羽绒服 + 防风外套，分层穿</li>
+        <li>🧤 手套围巾必备，不是矫情是生存</li>
+        <li>☕ Glühwein（热红酒）是冬天的精神支柱</li>
+      </ul>
+      <div class="quote">"冬天下午四点天黑，我分不清是傍晚还是半夜。"</div>
+    </div>
+  </div>
+
+  <div class="section-title">🎉 休闲篇</div>
+
+  <div class="card green" onclick="toggle(this)">
+    <span class="tag">🍻 唯一的快乐</span>
+    <div class="emoji-big">🍺</div>
+    <h3>德国人的快乐你想象不到</h3>
+    <div class="desc">啤酒比水便宜，这不是玩笑。融入当地生活从一杯开始。</div>
+    <div class="hidden-content">
+      <ul class="tip-text">
+        <li>🍺 超市啤酒0.5€起，比矿泉水便宜</li>
+        <li>🎄 圣诞市场（Weihnachtsmarkt）必逛，热红酒+香肠</li>
+        <li>🎪 狂欢节（Karneval）是德国人唯一放飞自我的时候</li>
+        <li>🏞️ 周末徒步（Wandern）是全民运动，别挣扎了</li>
+        <li>🏊 每个城市都有公共游泳馆，夏天避暑好去处</li>
+        <li>🎵 学生票价感人，歌剧/音乐会/博物馆都能便宜看</li>
+      </ul>
+      <div class="quote">"德国人周末的活动：徒步、喝酒、喝酒后徒步。"</div>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+  🇩🇪 在德国的每一天都是冒险 · 但有你就不怕 💕
+</div>
+
+<script>
+// Toggle cards
+function toggle(el) {
+  const c = el.querySelector('.hidden-content');
+  c.classList.toggle('show');
+}
+
+// Progress bar
+window.addEventListener('scroll', () => {
+  const h = document.documentElement;
+  const p = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100;
+  document.getElementById('progress').style.width = p + '%';
+});
+
+// Floating emojis
+(function() {
+  const f = document.getElementById('floaters');
+  const e = ['🇩🇪','🍺','🥨','🚂','🌧️','💶','🏠','📋'];
+  for (let i = 0; i < 15; i++) {
+    const s = document.createElement('div');
+    s.className = 'float';
+    s.textContent = e[Math.floor(Math.random()*e.length)];
+    s.style.left = Math.random()*100+'%';
+    s.style.animationDuration = (12+Math.random()*18)+'s';
+    s.style.animationDelay = Math.random()*15+'s';
+    f.appendChild(s);
+  }
+})();
+</script>
+</body>
+</html>

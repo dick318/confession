@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🎲 今日随机惊喜</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{min-height:100vh;background:#0f0f23;font-family:"PingFang SC","Microsoft YaHei",sans-serif;color:#e0e0e0;overflow-x:hidden}
+
+.hero{text-align:center;padding:60px 20px 20px;position:relative;z-index:1}
+.hero h1{font-size:36px;background:linear-gradient(90deg,#f59e0b,#ef4444,#8b5cf6,#06b6d4);background-size:300%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:shimmer 4s linear infinite}
+@keyframes shimmer{0%{background-position:0%}100%{background-position:300%}}
+.hero p{color:#6b7280;font-size:14px;margin-top:8px}
+
+.container{max-width:600px;margin:0 auto;padding:0 16px 40px;position:relative;z-index:1}
+
+/* Main spin button */
+.spin-hero{text-align:center;margin:30px 0}
+.spin-btn{width:160px;height:160px;border-radius:50%;border:3px solid rgba(255,255,255,0.1);background:radial-gradient(circle,rgba(139,92,246,0.2),rgba(6,182,212,0.1));font-size:64px;cursor:pointer;transition:all 0.3s;display:flex;align-items:center;justify-content:center;margin:0 auto;position:relative}
+.spin-btn:hover{transform:scale(1.1);border-color:rgba(139,92,246,0.5);box-shadow:0 0 40px rgba(139,92,246,0.2)}
+.spin-btn:active{transform:scale(0.95)}
+.spin-btn .label{position:absolute;bottom:-30px;font-size:14px;color:#9ca3af}
+
+/* Result card */
+.result-card{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:32px;margin:16px 0;text-align:center;min-height:120px;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:all 0.5s}
+.result-card .emoji{font-size:56px;margin-bottom:12px}
+.result-card .title{font-size:20px;font-weight:700;margin-bottom:8px}
+.result-card .body{color:#9ca3af;font-size:14px;line-height:1.8}
+.result-card .body b{color:#e0e0e0}
+.result-card.pulse{animation:resultPulse 0.5s ease}
+@keyframes resultPulse{0%{transform:scale(0.95);opacity:0}50%{transform:scale(1.02)}100%{transform:scale(1);opacity:1}}
+
+/* Category tabs */
+.tabs{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:24px 0}
+.tab{padding:8px 16px;border-radius:20px;font-size:13px;border:1px solid rgba(255,255,255,0.1);background:transparent;color:#9ca3af;cursor:pointer;transition:all 0.3s;font-family:inherit}
+.tab.active{background:rgba(139,92,246,0.2);border-color:#8b5cf6;color:#c4b5fd}
+
+/* Section */
+.section{margin:28px 0}
+.section h3{font-size:18px;color:#c4b5fd;margin-bottom:14px;text-align:center}
+
+/* Meme card */
+.meme-card{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:24px;margin-bottom:12px;text-align:center;cursor:pointer;transition:all 0.3s}
+.meme-card:hover{border-color:rgba(139,92,246,0.3);transform:translateY(-2px)}
+.meme-card .meme-text{font-size:18px;color:#e0e0e0;line-height:1.6}
+.meme-card .meme-sub{font-size:12px;color:#6b7280;margin-top:8px}
+
+/* Mood wheel */
+.mood-section{text-align:center;margin:30px 0}
+.mood-wheel{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;max-width:360px;margin:16px auto}
+.mood-btn{padding:16px 8px;border-radius:14px;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.03);cursor:pointer;transition:all 0.3s;text-align:center}
+.mood-btn:hover{transform:scale(1.05);border-color:rgba(255,255,255,0.15)}
+.mood-btn .m-icon{font-size:28px}
+.mood-btn .m-label{font-size:12px;color:#9ca3af;margin-top:4px}
+
+/* What to eat */
+.eat-card{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:24px;margin:16px 0;text-align:center}
+.eat-card h3{color:#f59e0b;margin-bottom:16px}
+.eat-result{font-size:48px;margin:16px 0}
+.eat-text{font-size:18px;color:#e0e0e0;margin-bottom:16px}
+
+/* Button */
+.btn{padding:12px 28px;border:none;border-radius:50px;font-size:15px;font-weight:600;cursor:pointer;font-family:inherit;transition:all 0.3s}
+.btn-main{background:linear-gradient(135deg,#8b5cf6,#06b6d4);color:#fff;box-shadow:0 4px 15px rgba(139,92,246,0.3)}
+.btn-main:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(139,92,246,0.4)}
+.btn-small{background:rgba(255,255,255,0.06);color:#c4b5fd;border:1px solid rgba(139,92,246,0.3);padding:8px 20px;font-size:13px}
+
+/* Progress */
+.progress{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,#f59e0b,#ef4444,#8b5cf6,#06b6d4);z-index:100;transition:width 0.1s}
+
+.footer{text-align:center;padding:40px 20px;color:#374151;font-size:13px;position:relative;z-index:1}
+
+/* Particles */
+.particles{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.particles span{position:absolute;width:3px;height:3px;border-radius:50%;animation:particleFloat linear infinite;opacity:0}
+@keyframes particleFloat{0%{transform:translateY(100vh);opacity:0}20%{opacity:0.4}100%{transform:translateY(-10vh);opacity:0}}
+
+@media(max-width:600px){.hero h1{font-size:26px}.spin-btn{width:130px;height:130px;font-size:52px}}
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+<div class="particles" id="particles"></div>
+
+<div class="hero">
+  <h1>🎲 今日随机惊喜</h1>
+  <p>每次打开都不一样 · 点中间大按钮开始</p>
+</div>
+
+<div class="container">
+
+  <!-- Main spin -->
+  <div class="spin-hero">
+    <div class="spin-btn" onclick="randomSurprise()">🎰<div class="label">点击获取惊喜</div></div>
+  </div>
+
+  <!-- Result area -->
+  <div class="result-card" id="resultCard">
+    <div class="emoji">🎁</div>
+    <div class="title">点击上面的按钮</div>
+    <div class="body">看看今天会给你什么惊喜</div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <button class="tab active" onclick="setCategory(this,'all')">🎲 全部</button>
+    <button class="tab" onclick="setCategory(this,'love')">💕 想你</button>
+    <button class="tab" onclick="setCategory(this,'meme')">😂 搞笑</button>
+    <button class="tab" onclick="setCategory(this,'fact')">🇩🇪 冷知识</button>
+  </div>
+
+  <!-- What to eat -->
+  <div class="eat-card">
+    <h3>🍜 今晚吃什么？</h3>
+    <div class="eat-result" id="eatEmoji">❓</div>
+    <div class="eat-text" id="eatText">点击决定今天吃什么</div>
+    <button class="btn btn-main" onclick="randomEat()">🔄 随机决定</button>
+  </div>
+
+  <!-- Mood -->
+  <div class="mood-section">
+    <h3 style="color:#c4b5fd;font-size:18px">😊 今天心情怎么样？</h3>
+    <div class="mood-wheel">
+      <div class="mood-btn" onclick="moodResult('happy')"><div class="m-icon">😄</div><div class="m-label">开心</div></div>
+      <div class="mood-btn" onclick="moodResult('tired')"><div class="m-icon">😴</div><div class="m-label">累</div></div>
+      <div class="mood-btn" onclick="moodResult('miss')"><div class="m-icon">🥺</div><div class="m-label">想你</div></div>
+      <div class="mood-btn" onclick="moodResult('stressed')"><div class="m-icon">😤</div><div class="m-label">压力大</div></div>
+      <div class="mood-btn" onclick="moodResult('bored')"><div class="m-icon">🥱</div><div class="m-label">无聊</div></div>
+      <div class="mood-btn" onclick="moodResult('happy2')"><div class="m-icon">🥰</div><div class="m-label">甜蜜</div></div>
+      <div class="mood-btn" onclick="moodResult('anxious')"><div class="m-icon">😰</div><div class="m-label">焦虑</div></div>
+      <div class="mood-btn" onclick="moodResult('excited')"><div class="m-icon">🤩</div><div class="m-label">兴奋</div></div>
+    </div>
+  </div>
+
+  <!-- Meme section -->
+  <div class="section">
+    <h3>😂 随机笑一个</h3>
+    <div id="memeArea"></div>
+    <div style="text-align:center;margin-top:12px">
+      <button class="btn btn-small" onclick="showMemes()">换一批</button>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+  🎲 每天都是盲盒 · 但想你这件事从不随机
+</div>
+
+<script>
+// Particles
+(function() {
+  const bg = document.getElementById('particles');
+  const colors = ['#f59e0b','#ef4444','#8b5cf6','#06b6d4','#ec4899','#34d399'];
+  for (let i = 0; i < 40; i++) {
+    const s = document.createElement('span');
+    s.style.left = Math.random()*100+'%';
+    s.style.background = colors[Math.floor(Math.random()*colors.length)];
+    s.style.animationDuration = (6+Math.random()*8)+'s';
+    s.style.animationDelay = Math.random()*10+'s';
+    bg.appendChild(s);
+  }
+})();
+
+// Data
+let currentCategory = 'all';
+
+const surprises = {
+  love: [
+    {emoji:'💕',title:'想你的瞬间',body:'早上醒来第一个想到的就是你'},
+    {emoji:'🌙',title:'晚安信号',body:'虽然有时差，但我的晚安永远准时'},
+    {emoji:'✈️',title:'下次见面',body:'已经在看机票了，等我'},
+    {emoji:'🍜',title:'美食想念',body:'吃到好吃的，第一反应是想和你分享'},
+    {emoji:'📱',title:'屏幕那边',body:'你的每条消息都是我的小确幸'},
+    {emoji:'🎵',title:'专属歌单',body:'听到那首歌的时候，满脑子都是你'},
+    {emoji:'☀️',title:'今日天气',body:'查了柏林的天气，记得带伞'},
+    {emoji:'💭',title:'发呆时间',body:'想你的第3847次，今天'},
+    {emoji:'🤗',title:'远程抱抱',body:'8000公里的拥抱，请查收'},
+    {emoji:'📸',title:'相册回忆',body:'偷偷又看了一遍你的照片'},
+  ],
+  meme: [
+    {emoji:'🐱',title:'猫咪说',body:'猫都能每天睡16小时，你为什么不能摸鱼？'},
+    {emoji:'📝',title:'论文进度',body:'今天完成了：换了个字体，调整了行距'},
+    {emoji:'☕',title:'咖啡状态',body:'血液里的咖啡因浓度：维持中'},
+    {emoji:'🔬',title:'实验日常',body:'实验成功了！——哦不，是对照组成功了'},
+    {emoji:'🍝',title:'意大利面代码',body:'我的代码就像意大利面，但它是工作着的意大利面'},
+    {emoji:'🐛',title:'Bug报告',body:'这不是Bug，这是Feature'},
+    {emoji:'📧',title:'邮件恐惧',body:'收件箱 (47 unread) — 假装没看到'},
+    {emoji:'🧠',title:'大脑状态',body:'CPU使用率100%，RAM已满，准备蓝屏'},
+    {emoji:'⏰',title:'Deadline',body:'Deadline是第一生产力，没有之一'},
+    {emoji:'🎲',title:'科研真相',body:'PhD = Permanent head Damage'},
+    {emoji:'🥲',title:'留学生日常',body:'在德国的每一天都在怀念中国菜'},
+    {emoji:'👨‍🔬',title:'导师语录',body:'"这个结果很有趣" = 重做'},
+  ],
+  fact: [
+    {emoji:'🍺',title:'啤酒事实',body:'德国啤酒法（Reinheitsgebot）从<b>1516年</b>就有了，规定啤酒只能用水、麦芽和啤酒花'},
+    {emoji:'🚪',title:'周日安静法',body:'德国周日不能大声做家务、不能用吸尘器，邻居可以报警'},
+    {emoji:'🥨',title:'面包天堂',body:'德国有超过<b>3200种</b>面包，是全世界面包种类最多的国家'},
+    {emoji:'🏠',title:'租房冷知识',body:'很多德国房子<b>没有厨房</b>！租客需要自己买橱柜和灶台'},
+    {emoji:'⏰',title:'准时文化',body:'在德国，迟到5分钟被认为很失礼，迟到15分钟 = 重大事故'},
+    {emoji:'🎓',title:'大学免费',body:'德国公立大学<b>免学费</b>！只交少量注册费（约300€/学期）'},
+    {emoji:'🚽',title:'厕所收费',body:'德国很多公共厕所要收费（0.5-1€），随身带硬币'},
+    {emoji:'🎄',title:'圣诞传统',body:'德国人24号就庆祝圣诞（不是25号），25-26号继续放假'},
+    {emoji:'🌳',title:'森林覆盖',body:'德国国土<b>33%</b>是森林，周末徒步是国民运动'},
+    {emoji:'💊',title:'药店文化',body:'普通止痛药也得去Apotheke（药店）买，超市没有'},
+  ]
+};
+
+function setCategory(btn, cat) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  currentCategory = cat;
+}
+
+function randomSurprise() {
+  let pool;
+  if (currentCategory === 'all') {
+    pool = [...surprises.love, ...surprises.meme, ...surprises.fact];
+  } else {
+    pool = surprises[currentCategory];
+  }
+  const item = pool[Math.floor(Math.random()*pool.length)];
+  const card = document.getElementById('resultCard');
+  card.classList.remove('pulse');
+  void card.offsetWidth;
+  card.classList.add('pulse');
+  card.innerHTML = `<div class="emoji">${item.emoji}</div><div class="title">${item.title}</div><div class="body">${item.body}</div>`;
+}
+
+// What to eat
+const foods = [
+  ['🍜','拉面'],'🍕','披萨','🍔','汉堡','🍣','寿司','🥗','沙拉',
+  ['🌮','Tacos'],['🍛','咖喱饭'],['🥟','饺子'],['🫕','火锅'],
+  ['🍝','意面'],['🥘','韩式拌饭'],['🍛','黄焖鸡'],['🍔','汉堡王'],
+  ['🍱','日式便当'],['🥐','可颂+咖啡'],['🧆','Falafel'],
+];
+// Rebuild as pairs
+const eatOptions = [
+  {e:'🍜',t:'拉面'},{e:'🍕',t:'披萨'},{e:'🍔',t:'汉堡'},{e:'🍣',t:'寿司'},
+  {e:'🥗',t:'沙拉'},{e:'🌮',t:'Tacos'},{e:'🍛',t:'咖喱饭'},{e:'🥟',t:'饺子'},
+  {e:'🫕',t:'火锅'},{e:'🍝',t:'意面'},{e:'🥘',t:'韩式拌饭'},{e:'🍱',t:'日式便当'},
+  {e:'🥐',t:'可颂+咖啡'},{e:'🍛',t:'黄焖鸡'},{e:'🍜',t:'越南粉'},{e:'🧆',t:'Falafel'},
+];
+function randomEat() {
+  let count = 0;
+  const iv = setInterval(() => {
+    const f = eatOptions[Math.floor(Math.random()*eatOptions.length)];
+    document.getElementById('eatEmoji').textContent = f.e;
+    document.getElementById('eatText').textContent = f.t;
+    count++;
+    if (count > 15) {
+      clearInterval(iv);
+      const final = eatOptions[Math.floor(Math.random()*eatOptions.length)];
+      document.getElementById('eatEmoji').textContent = final.e;
+      document.getElementById('eatText').textContent = '今天就吃 ' + final.t + '！';
+    }
+  }, 80);
+}
+
+// Mood
+const moodResponses = {
+  happy: {emoji:'🥳',text:'开心就好！保持这个状态！偷偷告诉你，我也很开心因为想到你'},
+  tired: {emoji:'😴',text:'累了就休息一下，论文不会跑的（虽然deadline会）来，远程给你揉揉肩'},
+  miss: {emoji:'🥺',text:'我也在想你。每天都在。下次见面一定要好好抱一下'},
+  stressed: {emoji:'💪',text:'压力大就深呼吸。你已经很厉害了，在德国读博本身就是勇士行为'},
+  bored: {emoji:'🎮',text:'无聊就玩玩上面的游戏！或者给我发消息，我永远在线'},
+  happy2: {emoji:'🥰',text:'甜蜜的！是不是又想起什么美好的事了？是我吗？😏'},
+  anxious: {emoji:'🫂',text:'焦虑很正常，每个人都有。深呼吸，一切都会好的。你是最棒的'},
+  excited: {emoji:'🤩',text:'什么好事？快告诉我！我也要一起兴奋！'},
+};
+function moodResult(mood) {
+  const r = moodResponses[mood];
+  const card = document.getElementById('resultCard');
+  card.classList.remove('pulse');
+  void card.offsetWidth;
+  card.classList.add('pulse');
+  card.innerHTML = `<div class="emoji">${r.emoji}</div><div class="body">${r.text}</div>`;
+}
+
+// Memes
+const memes = [
+  {text:'"我今天一定早睡"',sub:'——每个深夜还在看手机的人'},
+  {text:'论文进度：100%',sub:'完成度：10%'},
+  {text:'在读博士 ≠ 有文化',sub:'= 会在一个极窄的领域犯极专业的错误'},
+  {text:'导师：这个很简单',sub:'我：😐（已经做了一周）'},
+  {text:'德国冬天下午4点天黑',sub:'然后你开始怀疑自己是不是在北极'},
+  {text:'REWE周日关门',sub:'周六晚上的恐慌堪比DDL前夜'},
+  {text:'德铁准点了！',sub:'这概率比中彩票还低'},
+  {text:'当我跟别人说我在德国读博',sub:'对方：好厉害！\n我：好想回家'},
+  {text:'学术会议自由餐',sub:'= 唯一的动力去开会'},
+  {text:'LaTeX编译成功',sub:'比实验成功还开心（0 error 0 warning）'},
+];
+function showMemes() {
+  const area = document.getElementById('memeArea');
+  const shuffled = [...memes].sort(() => Math.random()-0.5).slice(0,3);
+  area.innerHTML = shuffled.map(m => `<div class="meme-card"><div class="meme-text">${m.text}</div><div class="meme-sub">${m.sub}</div></div>`).join('');
+}
+showMemes();
+
+// Progress
+window.addEventListener('scroll', () => {
+  const h = document.documentElement;
+  const p = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100;
+  document.getElementById('progress').style.width = p + '%';
+});
+</script>
+</body>
+</html>

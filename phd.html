@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🧪 给博士女友的摸鱼宝典</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{min-height:100vh;background:#0a0a1a;font-family:"PingFang SC","Microsoft YaHei",sans-serif;color:#e0e0e0;overflow-x:hidden}
+
+/* Lab-style grid bg */
+body::before{content:'';position:fixed;inset:0;background:linear-gradient(rgba(10,10,26,0.97),rgba(10,10,26,0.97)),repeating-linear-gradient(0deg,transparent,transparent 39px,rgba(100,100,255,0.03) 39px,rgba(100,100,255,0.03) 40px),repeating-linear-gradient(90deg,transparent,transparent 39px,rgba(100,100,255,0.03) 39px,rgba(100,100,255,0.03) 40px);z-index:0;pointer-events:none}
+
+.hero{text-align:center;padding:60px 20px 30px;position:relative;z-index:1}
+.hero h1{font-size:36px;color:#a78bfa}
+.hero p{color:#6b7280;margin-top:8px;font-size:14px}
+
+.container{max-width:680px;margin:0 auto;padding:0 16px 40px;position:relative;z-index:1}
+
+/* Status bar */
+.status-bar{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-bottom:30px}
+.status-pill{background:rgba(167,139,250,0.1);border:1px solid rgba(167,139,250,0.2);border-radius:20px;padding:8px 18px;font-size:13px;color:#a78bfa}
+
+/* Cards */
+.card{background:rgba(17,24,39,0.8);border:1px solid #1f2937;border-radius:16px;padding:28px;margin-bottom:16px;cursor:pointer;transition:all 0.3s}
+.card:hover{border-color:#a78bfa;box-shadow:0 0 30px rgba(167,139,250,0.08)}
+.card h3{font-size:18px;color:#c4b5fd;margin-bottom:8px}
+.card .text{color:#9ca3af;font-size:14px;line-height:1.8}
+.card .expand{display:none;margin-top:14px;padding-top:14px;border-top:1px solid #1f2937}
+.card .expand.show{display:block;animation:fadeIn 0.3s}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+.card .tag{display:inline-block;padding:3px 10px;border-radius:12px;font-size:11px;margin-bottom:10px;font-weight:600}
+.tag-funny{background:rgba(250,204,21,0.12);color:#facc15}
+.tag-pain{background:rgba(248,113,113,0.12);color:#f87171}
+.tag-tip{background:rgba(52,211,153,0.12);color:#34d399}
+.tag-game{background:rgba(96,165,250,0.12);color:#60a5fa}
+
+/* Games section */
+.game-area{background:rgba(17,24,39,0.8);border:1px solid #1f2937;border-radius:16px;padding:28px;margin-bottom:16px;text-align:center}
+.game-area h3{color:#c4b5fd;margin-bottom:16px}
+
+/* Wheel */
+.wheel-wrap{position:relative;width:260px;height:260px;margin:0 auto 20px}
+.wheel{width:100%;height:100%;border-radius:50%;border:3px solid #a78bfa;position:relative;transition:transform 3s cubic-bezier(0.17,0.67,0.12,0.99);overflow:hidden}
+.wheel-seg{position:absolute;width:50%;height:50%;top:0;left:50%;transform-origin:0% 100%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;clip-path:polygon(0 100%,100% 0,0 0)}
+.wheel-pointer{position:absolute;top:-10px;left:50%;transform:translateX(-50%);font-size:30px;z-index:10}
+
+/* Dice */
+.dice-area{text-align:center;margin:20px 0}
+.dice{font-size:80px;cursor:pointer;transition:transform 0.3s;user-select:none}
+.dice:hover{transform:scale(1.1)}
+.dice-result{margin-top:10px;font-size:16px;color:#c4b5fd;min-height:24px}
+
+/* Spin button */
+.btn{padding:12px 32px;border:none;border-radius:50px;font-size:15px;font-weight:600;cursor:pointer;font-family:inherit;transition:all 0.3s}
+.btn-purple{background:linear-gradient(135deg,#a78bfa,#7c3aed);color:#fff;box-shadow:0 4px 15px rgba(167,139,250,0.3)}
+.btn-purple:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(167,139,250,0.4)}
+
+/* Progress */
+.progress{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,#a78bfa,#f472b6);z-index:100;transition:width 0.1s}
+
+.section-title{font-size:20px;color:#a78bfa;margin:32px 0 16px;padding-left:14px;border-left:3px solid #a78bfa}
+
+.footer{text-align:center;padding:40px 20px;color:#374151;font-size:13px;position:relative;z-index:1}
+
+@media(max-width:600px){.hero h1{font-size:26px}.wheel-wrap{width:220px;height:220px}}
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+
+<div class="hero">
+  <h1>🧪 摸鱼宝典</h1>
+  <p>给正在读博的你 · 论文可以晚点写，快乐不能等</p>
+</div>
+
+<div class="container">
+
+  <div class="status-bar">
+    <div class="status-pill" id="clock">🕐 当前时间</div>
+    <div class="status-pill">📅 今天摸鱼 <span id="fishCount">0</span> 分钟</div>
+    <div class="status-pill" id="statusPill">😴 状态：论文写了个标题</div>
+  </div>
+
+  <div class="section-title">📖 学术日常</div>
+
+  <div class="card" onclick="toggle(this)">
+    <span class="tag tag-pain">扎心</span>
+    <h3>📧 老板邮件的阅读理解</h3>
+    <div class="text">收件箱里躺着一封新邮件，你已经盯着它看了10分钟，还没敢点开。</div>
+    <div class="expand">
+      <div class="text">
+        <p>🔹 <b>"Could you look at this?"</b> = 这周给我结果</p>
+        <p>🔹 <b>"Interesting approach"</b> = 重写</p>
+        <p>🔹 <b>"Let's discuss"</b> = 你有问题</p>
+        <p>🔹 <b>"See attached"</b> = 你的文章我改了100处</p>
+        <p>🔹 <b>"When you have time"</b> = 现在</p>
+        <p>🔹 <b>"Great progress!"</b> = 继续加油（然后继续提要求）</p>
+        <p style="margin-top:12px;color:#f87171">翻译完毕，可以安心点开了 🥲</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" onclick="toggle(this)">
+    <span class="tag tag-funny">搞笑</span>
+    <h3>🎓 读博的五个阶段</h3>
+    <div class="text">每一个PhD都逃不过的命运循环。</div>
+    <div class="expand">
+      <div class="text">
+        <p><b>第1年：</b>"我要改变世界！" 🌟</p>
+        <p><b>第2年：</b>"也许先改变这个领域…" 📚</p>
+        <p><b>第3年：</b>"能毕业就行" 😐</p>
+        <p><b>第4年：</b>"谁来救救我" 😭</p>
+        <p><b>第5年：</b>"我再也不想看到LaTeX了" 💀</p>
+        <p style="margin-top:12px">——但你还是会在致谢里写"感谢这段宝贵的科研经历"</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" onclick="toggle(this)">
+    <span class="tag tag-tip">秘籍</span>
+    <h3>📝 论文写作の加速技巧</h3>
+    <div class="text">亲测有效的生产力小窍门，不保证学术质量但保证快乐。</div>
+    <div class="expand">
+      <div class="text">
+        <p>🔹 <b>Pomodoro 改良版：</b>工作25分钟，摸鱼25分钟，公平合理</p>
+        <p>🔹 <b>先写最简单的部分：</b>Acknowledgements永远是最好的开头</p>
+        <p>🔹 <b>给论文设个BGM：</b>Lo-fi beats写Intro，重金属改Bug</p>
+        <p>🔹 <b>站着写：</b>据说能提高效率（其实是因为坐着腰疼）</p>
+        <p>🔹 <b>找人吐槽：</b>把你的痛苦说出来，论文就能继续写了</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" onclick="toggle(this)">
+    <span class="tag tag-pain">灵魂拷问</span>
+    <h3>❓ 读博期间的灵魂问答</h3>
+    <div class="text">过年回家必备应对手册。</div>
+    <div class="expand">
+      <div class="text">
+        <p>Q: "博士读几年？" → A: "看造化"</p>
+        <p>Q: "毕业了干嘛？" → A: "可能继续卷博后"</p>
+        <p>Q: "你研究啥？" → A: "说了你也不懂"（内心：我也不太懂）</p>
+        <p>Q: "有对象了吗？" → A: "有！在中国" 😏</p>
+        <p>Q: "工资高吗？" → A: "…我们聊点别的吧"</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-title">🎮 摸鱼时间到</div>
+
+  <div class="game-area">
+    <h3>🎰 今天吃什么？转盘</h3>
+    <div class="wheel-wrap">
+      <div class="wheel-pointer">▼</div>
+      <canvas id="wheel" width="260" height="260"></canvas>
+    </div>
+    <button class="btn btn-purple" onclick="spinWheel()">🔄 转！</button>
+    <div class="dice-result" id="wheelResult"></div>
+  </div>
+
+  <div class="game-area">
+    <h3>🎲 今日运气骰子</h3>
+    <div class="dice" onclick="rollDice()" id="dice">🎲</div>
+    <div class="dice-result" id="diceResult">点击骰子看看今天的运气</div>
+  </div>
+
+  <div class="game-area">
+    <h3>🎯 理由生成器</h3>
+    <p style="color:#6b7280;margin-bottom:16px;font-size:14px">不想干活的时候点一下</p>
+    <button class="btn btn-purple" onclick="genExcuse()">给我一个摸鱼的理由</button>
+    <div class="dice-result" id="excuseResult" style="font-size:18px;margin-top:16px"></div>
+  </div>
+
+  <div class="card" onclick="toggle(this)">
+    <span class="tag tag-game">互动</span>
+    <h3>📊 摸鱼成就解锁</h3>
+    <div class="text">点击展开查看你的摸鱼等级</div>
+    <div class="expand">
+      <div class="text" id="achievements">
+        <p>⬜ 边缘摸鱼 — 摸鱼 < 30分钟</p>
+        <p>⬜ 初级摸鱼师 — 摸鱼 1小时+</p>
+        <p>⬜ 摸鱼达人 — 摸鱼 2小时+</p>
+        <p>⬜ 摸鱼大师 — 看完这个页面</p>
+        <p>⬜ 传说级摸鱼王 — 玩完了所有游戏</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+  🧪 记住：每一个伟大的科学家都摸过鱼 · 只是论文里没写而已
+</div>
+
+<script>
+// Clock
+function updateClock() {
+  const now = new Date();
+  const h = now.getHours(), m = now.getMinutes();
+  document.getElementById('clock').textContent = `🕐 ${h}:${m.toString().padStart(2,'0')}`;
+  // Status based on time
+  const statuses = [
+    [0,8,'😴 状态：论文写了个标题'],
+    [8,10,'☕ 状态：咖啡加载中'],
+    [10,12,'📖 状态：假装看文献'],
+    [12,14,'🍜 状态：午饭是最认真的事'],
+    [14,16,'😴 状态：午后的绝望'],
+    [16,18,'📝 状态：终于写了两段'],
+    [18,20,'🍕 状态：等晚饭'],
+    [20,22,'😅 状态：晚上才是生产力'],
+    [22,24,'💀 状态：明天再说吧']
+  ];
+  for (const [s,e,t] of statuses) {
+    if (h >= s && h < e) { document.getElementById('statusPill').textContent = t; break; }
+  }
+}
+updateClock(); setInterval(updateClock, 60000);
+
+// Fish counter
+let fishMin = 0;
+setInterval(() => { fishMin++; document.getElementById('fishCount').textContent = fishMin; }, 60000);
+
+// Toggle cards
+function toggle(el) { el.querySelector('.expand').classList.toggle('show'); }
+
+// Spin wheel
+const foods = ['🍜 拉面','🍕 披萨','🍔 汉堡','🍣 寿司','🥗 沙拉','🌮 Tacos','🍛 咖喱','🥟 饺子'];
+function spinWheel() {
+  const canvas = document.getElementById('wheel');
+  const ctx = canvas.getContext('2d');
+  const cx = 130, cy = 130, r = 120;
+  const segAngle = (2*Math.PI) / foods.length;
+  const colors = ['#a78bfa','#f472b6','#60a5fa','#34d399','#facc15','#f97316','#ef4444','#06b6d4'];
+
+  function drawWheel(offset) {
+    ctx.clearRect(0,0,260,260);
+    for (let i = 0; i < foods.length; i++) {
+      const start = i * segAngle + offset;
+      ctx.beginPath(); ctx.moveTo(cx,cy);
+      ctx.arc(cx,cy,r,start,start+segAngle);
+      ctx.fillStyle = colors[i]; ctx.fill();
+      ctx.save(); ctx.translate(cx,cy);
+      ctx.rotate(start + segAngle/2);
+      ctx.fillStyle = '#fff'; ctx.font = 'bold 12px sans-serif';
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText(foods[i], r*0.6, 0);
+      ctx.restore();
+    }
+    ctx.beginPath(); ctx.arc(cx,cy,15,0,Math.PI*2);
+    ctx.fillStyle = '#0a0a1a'; ctx.fill();
+  }
+  drawWheel(0);
+
+  const spin = Math.random() * Math.PI * 20 + Math.PI * 10;
+  let current = 0;
+  const start = performance.now();
+  function animate(t) {
+    const elapsed = t - start;
+    const progress = Math.min(elapsed / 3000, 1);
+    const ease = 1 - Math.pow(1 - progress, 3);
+    current = spin * ease;
+    drawWheel(current);
+    if (progress < 1) requestAnimationFrame(animate);
+    else {
+      const normalized = (((-current) % (2*Math.PI)) + 2*Math.PI) % (2*Math.PI);
+      const idx = Math.floor(normalized / segAngle) % foods.length;
+      document.getElementById('wheelResult').textContent = `🎉 今天就吃 ${foods[idx]}！`;
+    }
+  }
+  requestAnimationFrame(animate);
+}
+// Draw initial wheel
+setTimeout(() => spinWheel(), 100);
+
+// Dice
+const diceFaces = ['⚀','⚁','⚂','⚃','⚄','⚅'];
+const lucks = [
+  '💀 大凶：今天别碰论文',
+  '😅 小凶：小心老板突然找你',
+  '😐 平：不功不过，正常摸鱼',
+  '🙂 小吉：灵感要来了',
+  '😄 中吉：今天效率会很高',
+  '🌟 大吉：快去买彩票！'
+];
+function rollDice() {
+  const d = document.getElementById('dice');
+  let count = 0;
+  const iv = setInterval(() => {
+    d.textContent = diceFaces[Math.floor(Math.random()*6)];
+    d.style.transform = `rotate(${Math.random()*360}deg)`;
+    count++;
+    if (count > 15) {
+      clearInterval(iv);
+      const result = Math.floor(Math.random()*6);
+      d.textContent = diceFaces[result];
+      d.style.transform = 'rotate(0deg)';
+      document.getElementById('diceResult').textContent = lucks[result];
+    }
+  }, 80);
+}
+
+// Excuse generator
+const excuses = [
+  '今天阳光太好了，适合发呆',
+  '我的灵感在洗澡的时候才会来',
+  '刚发现一篇"必须马上读"的论文',
+  '电脑风扇声音太大，影响思考',
+  '今天星座运势说不宜科研',
+  '刚学会一个新的LaTeX技巧，要反复练习',
+  '我的大脑需要rest period来巩固知识',
+  '实验设备今天风水不好',
+  '等咖啡凉了就写（咖啡永远不会凉）',
+  '导师今天不在，这是天意',
+  '刚才idea太好了，需要先消化一下',
+  'Window更新了，必须重启（虽然是Linux）'
+];
+function genExcuse() {
+  const el = document.getElementById('excuseResult');
+  el.style.opacity = 0;
+  setTimeout(() => {
+    el.textContent = '💭 "' + excuses[Math.floor(Math.random()*excuses.length)] + '"';
+    el.style.opacity = 1;
+    el.style.transition = 'opacity 0.3s';
+  }, 200);
+}
+
+// Progress
+window.addEventListener('scroll', () => {
+  const h = document.documentElement;
+  const p = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100;
+  document.getElementById('progress').style.width = p + '%';
+});
+</script>
+</body>
+</html>
