@@ -36,11 +36,11 @@ body::before{content:'';position:fixed;inset:0;background:linear-gradient(rgba(1
 .tag-game{background:rgba(96,165,250,0.12);color:#60a5fa}
 
 /* Games section */
-.game-area{background:rgba(17,24,39,0.8);border:1px solid #1f2937;border-radius:16px;padding:28px;margin-bottom:16px;text-align:center}
+.game-area{background:rgba(17,24,39,0.8);border:1px solid #1f2937;border-radius:16px;padding:24px 16px;margin-bottom:16px;text-align:center}
 .game-area h3{color:#c4b5fd;margin-bottom:16px}
 
 /* Wheel */
-.wheel-wrap{position:relative;width:260px;height:260px;margin:0 auto 20px}
+.wheel-wrap{position:relative;width:220px;height:220px;margin:0 auto 20px}
 .wheel{width:100%;height:100%;border-radius:50%;border:3px solid #a78bfa;position:relative;transition:transform 3s cubic-bezier(0.17,0.67,0.12,0.99);overflow:hidden}
 .wheel-seg{position:absolute;width:50%;height:50%;top:0;left:50%;transform-origin:0% 100%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;clip-path:polygon(0 100%,100% 0,0 0)}
 .wheel-pointer{position:absolute;top:-10px;left:50%;transform:translateX(-50%);font-size:30px;z-index:10}
@@ -63,7 +63,7 @@ body::before{content:'';position:fixed;inset:0;background:linear-gradient(rgba(1
 
 .footer{text-align:center;padding:40px 20px;color:#374151;font-size:13px;position:relative;z-index:1}
 
-@media(max-width:600px){.hero h1{font-size:26px}.wheel-wrap{width:220px;height:220px}}
+@media(max-width:600px){.hero h1{font-size:26px}.wheel-wrap{width:200px;height:200px}.card{padding:20px 16px}}
 </style>
 </head>
 <body>
@@ -227,14 +227,17 @@ function toggle(el) { el.querySelector('.expand').classList.toggle('show'); }
 // Spin wheel
 const foods = ['🍜 拉面','🍕 披萨','🍔 汉堡','🍣 寿司','🥗 沙拉','🌮 Tacos','🍛 咖喱','🥟 饺子'];
 function spinWheel() {
+  const wrap = document.querySelector('.wheel-wrap');
+  const size = wrap.offsetWidth;
   const canvas = document.getElementById('wheel');
+  canvas.width = size; canvas.height = size;
   const ctx = canvas.getContext('2d');
-  const cx = 130, cy = 130, r = 120;
+  const cx = size/2, cy = size/2, r = size/2 - 10;
   const segAngle = (2*Math.PI) / foods.length;
   const colors = ['#a78bfa','#f472b6','#60a5fa','#34d399','#facc15','#f97316','#ef4444','#06b6d4'];
 
   function drawWheel(offset) {
-    ctx.clearRect(0,0,260,260);
+    ctx.clearRect(0,0,size,size);
     for (let i = 0; i < foods.length; i++) {
       const start = i * segAngle + offset;
       ctx.beginPath(); ctx.moveTo(cx,cy);
@@ -247,7 +250,7 @@ function spinWheel() {
       ctx.fillText(foods[i], r*0.6, 0);
       ctx.restore();
     }
-    ctx.beginPath(); ctx.arc(cx,cy,15,0,Math.PI*2);
+    ctx.beginPath(); ctx.arc(cx,cy,12,0,Math.PI*2);
     ctx.fillStyle = '#0a0a1a'; ctx.fill();
   }
   drawWheel(0);
