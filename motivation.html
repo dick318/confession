@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>💪 博士生存力量</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{min-height:100vh;background:#0f0f23;font-family:"PingFang SC","Microsoft YaHei",sans-serif;color:#e0e0e0;overflow-x:hidden;touch-action:manipulation}
+.hero{text-align:center;padding:50px 20px 20px;position:relative;z-index:1}
+.hero h1{font-size:32px;background:linear-gradient(90deg,#34d399,#06b6d4,#8b5cf6);background-size:300%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:shimmer 4s linear infinite}
+@keyframes shimmer{0%{background-position:0%}100%{background-position:300%}}
+.hero p{color:#6b7280;font-size:14px;margin-top:8px}
+.container{max-width:600px;margin:0 auto;padding:0 16px 40px;position:relative;z-index:1}
+
+/* Daily quote */
+.quote-card{background:linear-gradient(135deg,rgba(52,211,153,0.1),rgba(139,92,246,0.1));border:1px solid rgba(52,211,153,0.2);border-radius:24px;padding:36px 24px;text-align:center;margin:20px 0}
+.quote-card .emoji{font-size:56px;margin-bottom:12px}
+.quote-card .quote{font-size:18px;color:#e0e0e0;line-height:1.8;font-style:italic}
+.quote-card .author{font-size:13px;color:#6b7280;margin-top:12px}
+.quote-card .date{font-size:12px;color:#34d399;margin-top:8px}
+
+/* PhD stats */
+.stats-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin:20px 0}
+.stat-card{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:20px;text-align:center}
+.stat-card .icon{font-size:28px;margin-bottom:6px}
+.stat-card .val{font-size:28px;font-weight:800;color:#34d399}
+.stat-card .lbl{font-size:12px;color:#6b7280;margin-top:4px}
+
+/* Progress bar */
+.prog-card{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:24px;margin:16px 0}
+.prog-card h3{color:#c4b5fd;font-size:18px;margin-bottom:16px;text-align:center}
+.prog-bar{height:24px;background:rgba(255,255,255,0.06);border-radius:12px;overflow:hidden;position:relative;margin-bottom:8px}
+.prog-fill{height:100%;border-radius:12px;background:linear-gradient(90deg,#34d399,#06b6d4,#8b5cf6);transition:width 1.5s ease;position:relative}
+.prog-fill::after{content:attr(data-pct);position:absolute;right:8px;top:50%;transform:translateY(-50%);font-size:12px;font-weight:700;color:#fff}
+.prog-label{display:flex;justify-content:space-between;font-size:12px;color:#6b7280}
+.prog-item{margin-top:14px}
+.prog-item-label{display:flex;justify-content:space-between;font-size:14px;margin-bottom:6px}
+.prog-item-label .name{color:#e0e0e0}.prog-item-label .pct{color:#34d399;font-weight:600}
+
+/* Achievements */
+.achieve-card{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:24px;margin:16px 0}
+.achieve-card h3{color:#facc15;font-size:18px;margin-bottom:14px;text-align:center}
+.badge-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.badge{text-align:center;padding:16px 8px;border-radius:14px;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.03);transition:all 0.3s}
+.badge.earned{border-color:rgba(250,204,21,0.3);background:rgba(250,204,21,0.08)}
+.badge .b-icon{font-size:32px;margin-bottom:6px}
+.badge .b-name{font-size:12px;color:#9ca3af}
+.badge.earned .b-name{color:#facc15}
+
+/* Punch card */
+.punch-card{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:24px;margin:16px 0;text-align:center}
+.punch-card h3{color:#c4b5fd;font-size:18px;margin-bottom:14px}
+.punch-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;max-width:350px;margin:12px auto}
+.punch-day{aspect-ratio:1;border-radius:8px;border:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;font-size:13px;color:#6b7280}
+.punch-day.today{border-color:#34d399;color:#34d399;font-weight:700}
+.punch-day.done{background:rgba(52,211,153,0.15);border-color:#34d399;color:#34d399}
+.punch-day.done::after{content:'✓'}
+.btn{padding:12px 28px;border:none;border-radius:50px;font-size:15px;font-weight:600;cursor:pointer;font-family:inherit;-webkit-user-select:none;user-select:none}
+.btn:active{transform:scale(0.93)!important}
+.btn-green{background:linear-gradient(135deg,#34d399,#06b6d4);color:#fff;margin-top:14px}
+
+.footer{text-align:center;padding:40px 20px;color:#374151;font-size:13px;position:relative;z-index:1}
+.progress{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,#34d399,#8b5cf6);z-index:100;transition:width 0.1s}
+@media(max-width:600px){.hero h1{font-size:26px}.badge-grid{grid-template-columns:repeat(3,1fr);gap:8px}}
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+<div class="hero"><h1>💪 博士生存力量</h1><p>你比你想象的更厉害 · 每天都在进步</p></div>
+<div class="container">
+
+<!-- Daily Quote -->
+<div class="quote-card">
+<div class="emoji" id="qEmoji">💪</div>
+<div class="quote" id="qText">加载中...</div>
+<div class="author" id="qAuthor"></div>
+<div class="date" id="qDate"></div>
+</div>
+
+<!-- PhD Stats -->
+<div class="stats-grid">
+<div class="stat-card"><div class="icon">📅</div><div class="val" id="phdDays">0</div><div class="lbl">读博天数</div></div>
+<div class="stat-card"><div class="icon">📝</div><div class="val" id="words">0</div><div class="lbl">估计写了N字论文</div></div>
+<div class="stat-card"><div class="icon">🏆</div><div class="val" id="topPct">0%</div><div class="lbl">超越了N%的博士生</div></div>
+<div class="stat-card"><div class="icon">💕</div><div class="val" id="missCount">∞</div><div class="lbl">想你的次数</div></div>
+</div>
+
+<!-- Thesis Progress -->
+<div class="prog-card">
+<h3>📊 论文进度（拖动调整）</h3>
+<div class="prog-item">
+<div class="prog-item-label"><span class="name">📖 文献综述</span><span class="pct" id="p1Pct">0%</span></div>
+<div class="prog-bar"><div class="prog-fill" id="p1Fill" data-pct="" style="width:0%"></div></div>
+<input type="range" min="0" max="100" value="0" style="width:100%" oninput="updateProg('p1',this.value)">
+</div>
+<div class="prog-item">
+<div class="prog-item-label"><span class="name">🔬 实验/数据</span><span class="pct" id="p2Pct">0%</span></div>
+<div class="prog-bar"><div class="prog-fill" id="p2Fill" data-pct="" style="width:0%"></div></div>
+<input type="range" min="0" max="100" value="0" style="width:100%" oninput="updateProg('p2',this.value)">
+</div>
+<div class="prog-item">
+<div class="prog-item-label"><span class="name">📝 论文撰写</span><span class="pct" id="p3Pct">0%</span></div>
+<div class="prog-bar"><div class="prog-fill" id="p3Fill" data-pct="" style="width:0%"></div></div>
+<input type="range" min="0" max="100" value="0" style="width:100%" oninput="updateProg('p3',this.value)">
+</div>
+</div>
+
+<!-- Achievements -->
+<div class="achieve-card">
+<h3>🏅 生存成就</h3>
+<div class="badge-grid" id="badges"></div>
+</div>
+
+<!-- Punch Card -->
+<div class="punch-card">
+<h3>📅 本周打卡</h3>
+<div class="punch-grid" id="punchGrid"></div>
+<button class="btn btn-green" onclick="punchToday()">✅ 今天我坚持了</button>
+<div style="color:#6b7280;font-size:12px;margin-top:8px" id="punchMsg"></div>
+</div>
+
+</div>
+<div class="footer">💪 你已经是最勇敢的人了 · 我永远支持你</div>
+
+<script>
+// PhD start date
+const PHD_START=new Date('2025-03-01');
+const now=new Date();
+const phdDays=Math.floor((now-PHD_START)/86400000);
+document.getElementById('phdDays').textContent=phdDays;
+document.getElementById('words').textContent=Math.floor(phdDays*80).toLocaleString();
+document.getElementById('topPct').textContent=Math.min(99,Math.floor(50+phdDays/20))+'%';
+
+// Daily quote
+const quotes=[
+{e:'💪',q:'你现在的努力，是对未来最好的投资。',a:'—— 给正在读博的你'},
+{e:'🌟',q:'PhD不是一场冲刺，是一场马拉松。',a:'—— 每个过来人'},
+{e:'🧠',q:'觉得自己不够好？那是冒充者综合征，所有博士生都有。',a:'—— 学术心理学'},
+{e:'🌱',q:'每一个小进步都值得庆祝，哪怕只是改了一个逗号。',a:'—— 论文写作指南'},
+{e:'☕',q:'今天的你，又比昨天多知道了一件事。',a:'—— 终身学习者'},
+{e:'🦸‍♀️',q:'在异国他乡独自读博，这本身就是超级英雄行为。',a:'—— 你的男朋友'},
+{e:'📈',q:'实验失败不是终点,是排除了一种可能性。',a:'—— 爱迪生（大概）'},
+{e:'🏔️',q:'山顶的风景值得攀登的辛苦,但路上的风景也很美。',a:'—— 人生哲理'},
+{e:'💎',q:'压力产生钻石。你正在变成最闪亮的那颗。',a:'—— 给你的加油'},
+{e:'🤗',q:'不管今天论文写了多少,你都是我最优秀的博士。',a:'—— 永远支持你的人'},
+{e:'🔬',q:'Science is not about being right, it\'s about being less wrong.',a:'—— 科学方法论'},
+{e:'🌈',q:'暴风雨之后总有彩虹,答辩之后总有假期。',a:'—— 博士生存法则'},
+{e:'🎓',q:'有一天你会回头看,觉得这段时光无比珍贵。',a:'—— 所有毕业的博士'},
+{e:'💕',q:'不管什么时候毕业,我都在。等你。',a:'—— 你的男朋友'},
+];
+const qIdx=Math.floor((now-new Date('2024-01-01'))/86400000)%quotes.length;
+const q=quotes[qIdx];
+document.getElementById('qEmoji').textContent=q.e;
+document.getElementById('qText').textContent=q.q;
+document.getElementById('qAuthor').textContent=q.a;
+document.getElementById('qDate').textContent=now.toLocaleDateString('zh-CN',{month:'long',day:'numeric',weekday:'long'});
+
+// Progress bars
+function updateProg(id,val){
+document.getElementById(id+'Pct').textContent=val+'%';
+const fill=document.getElementById(id+'Fill');
+fill.style.width=val+'%';fill.dataset.pct=val+'%';
+localStorage.setItem('prog_'+id,val);
+}
+['p1','p2','p3'].forEach(id=>{
+const saved=localStorage.getItem('prog_'+id);
+if(saved){
+const input=document.querySelector(`input[oninput*="${id}"]`);
+if(input)input.value=saved;
+updateProg(id,saved);
+}
+});
+
+// Achievements
+const badges=[
+{icon:'📅',name:'第一天',check:()=>phdDays>=1},
+{icon:'📚',name:'一个月',check:()=>phdDays>=30},
+{icon:'📝',name:'熬过考核',check:()=>phdDays>=90},
+{icon:'🏅',name:'半年坚持',check:()=>phdDays>=180},
+{icon:'🎉',name:'一周年',check:()=>phdDays>=365},
+{icon:'💎',name:'两年博士',check:()=>phdDays>=730},
+{icon:'🦸‍♀️',name:'异地勇士',check:()=>true},
+{icon:'🌍',name:'跨国恋人',check:()=>true},
+{icon:'💪',name:'永不放弃',check:()=>true},
+];
+document.getElementById('badges').innerHTML=badges.map(b=>{
+const earned=b.check();
+return `<div class="badge${earned?' earned':''}"><div class="b-icon">${earned?b.icon:'🔒'}</div><div class="b-name">${b.name}</div></div>`;
+}).join('');
+
+// Punch card
+const punchData=JSON.parse(localStorage.getItem('punchData')||'{}');
+const weekStart=new Date(now);weekStart.setDate(now.getDate()-now.getDay()+1);
+const dayNames=['一','二','三','四','五','六','日'];
+const grid=document.getElementById('punchGrid');
+for(let i=0;i<7;i++){
+const d=new Date(weekStart);d.setDate(weekStart.getDate()+i);
+const key=d.toISOString().split('T')[0];
+const isToday=key===now.toISOString().split('T')[0];
+const isDone=punchData[key];
+const el=document.createElement('div');
+el.className='punch-day'+(isToday?' today':'')+(isDone?' done':'');
+if(!isDone)el.textContent=dayNames[i];
+grid.appendChild(el);
+}
+
+function punchToday(){
+const key=now.toISOString().split('T')[0];
+if(punchData[key]){document.getElementById('punchMsg').textContent='今天已经打过卡啦 ✨';return;}
+punchData[key]=true;
+localStorage.setItem('punchData',JSON.stringify(punchData));
+document.getElementById('punchMsg').textContent='打卡成功！你真棒 🎉';
+const days=document.querySelectorAll('.punch-day.today');
+days.forEach(d=>{d.classList.add('done');d.textContent='';});
+}
+
+window.addEventListener('scroll',()=>{const h=document.documentElement;document.getElementById('progress').style.width=(h.scrollTop/(h.scrollHeight-h.clientHeight))*100+'%';},{passive:true});
+</script>
+</body>
+</html>

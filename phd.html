@@ -194,12 +194,13 @@ body::before{content:'';position:fixed;inset:0;background:linear-gradient(rgba(1
 </div>
 
 <script>
-// Clock
+// Clock - 使用德国时间 (Europe/Berlin)
 function updateClock() {
   const now = new Date();
-  const h = now.getHours(), m = now.getMinutes();
-  document.getElementById('clock').textContent = `🕐 ${h}:${m.toString().padStart(2,'0')}`;
-  // Status based on time
+  const deTimeStr = now.toLocaleTimeString('de-DE', {timeZone:'Europe/Berlin', hour:'2-digit', minute:'2-digit', hour12:false});
+  const deHour = parseInt(now.toLocaleTimeString('de-DE', {timeZone:'Europe/Berlin', hour:'2-digit', hour12:false}));
+  document.getElementById('clock').textContent = `🕐 德国 ${deTimeStr}`;
+  // Status based on German time
   const statuses = [
     [0,8,'😴 状态：论文写了个标题'],
     [8,10,'☕ 状态：咖啡加载中'],
@@ -212,7 +213,7 @@ function updateClock() {
     [22,24,'💀 状态：明天再说吧']
   ];
   for (const [s,e,t] of statuses) {
-    if (h >= s && h < e) { document.getElementById('statusPill').textContent = t; break; }
+    if (deHour >= s && deHour < e) { document.getElementById('statusPill').textContent = t; break; }
   }
 }
 updateClock(); setInterval(updateClock, 60000);

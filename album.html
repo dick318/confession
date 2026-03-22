@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>📸 我们的回忆</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{min-height:100vh;background:#0f0f23;font-family:"PingFang SC","Microsoft YaHei",sans-serif;color:#e0e0e0;overflow-x:hidden;touch-action:manipulation}
+
+.hero{text-align:center;padding:50px 20px 20px;position:relative;z-index:1}
+.hero h1{font-size:32px;background:linear-gradient(90deg,#f97316,#ec4899,#a78bfa);background-size:300%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:shimmer 4s linear infinite}
+@keyframes shimmer{0%{background-position:0%}100%{background-position:300%}}
+.hero p{color:#6b7280;font-size:14px;margin-top:8px}
+
+.container{max-width:600px;margin:0 auto;padding:0 16px 40px;position:relative;z-index:1}
+
+/* Photo counter */
+.photo-stats{text-align:center;margin:20px 0}
+.photo-stats .big{font-size:48px;font-weight:800;background:linear-gradient(135deg,#f97316,#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.photo-stats .lbl{font-size:14px;color:#6b7280;margin-top:4px}
+
+/* Gallery card */
+.gallery-card{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:20px;overflow:hidden;margin-bottom:20px;transition:all 0.3s}
+.gallery-card:active{transform:scale(0.98);transition:all 0.1s}
+.gc-img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block}
+.gc-body{padding:20px}
+.gc-date{font-size:13px;color:#a78bfa;margin-bottom:6px;font-weight:600}
+.gc-title{font-size:18px;font-weight:700;margin-bottom:8px}
+.gc-caption{font-size:14px;color:#9ca3af;line-height:1.7}
+.gc-tag{display:inline-block;padding:4px 12px;border-radius:12px;font-size:12px;margin-top:10px;font-weight:600}
+.gc-tag.love{background:rgba(236,72,153,0.12);color:#ec4899}
+.gc-tag.travel{background:rgba(96,165,250,0.12);color:#60a5fa}
+.gc-tag.food{background:rgba(250,204,21,0.12);color:#facc15}
+.gc-tag.daily{background:rgba(52,211,153,0.12);color:#34d399}
+
+/* Lightbox */
+.lightbox{position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:200;display:none;align-items:center;justify-content:center;flex-direction:column;padding:20px;backdrop-filter:blur(10px)}
+.lightbox.show{display:flex}
+.lb-img{max-width:100%;max-height:70vh;border-radius:12px;object-fit:contain}
+.lb-caption{color:#e0e0e0;font-size:16px;margin-top:16px;text-align:center;max-width:500px;line-height:1.6}
+.lb-close{position:absolute;top:16px;right:16px;width:40px;height:40px;border-radius:50%;border:1px solid rgba(255,255,255,0.2);background:rgba(0,0,0,0.5);color:#fff;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.lb-nav{position:absolute;top:50%;width:44px;height:44px;border-radius:50%;border:1px solid rgba(255,255,255,0.2);background:rgba(0,0,0,0.5);color:#fff;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;transform:translateY(-50%)}
+.lb-prev{left:12px}
+.lb-next{right:12px}
+
+/* Placeholder hint */
+.hint-card{background:rgba(255,255,255,0.04);border:1px dashed rgba(255,255,255,0.15);border-radius:20px;padding:28px;text-align:center;margin:16px 0}
+.hint-card .emoji{font-size:40px;margin-bottom:12px}
+.hint-card .text{color:#6b7280;font-size:14px;line-height:1.8}
+
+.footer{text-align:center;padding:40px 20px;color:#374151;font-size:13px;position:relative;z-index:1}
+.progress{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,#f97316,#ec4899);z-index:100;transition:width 0.1s}
+
+@media(max-width:600px){.hero h1{font-size:26px}.gc-body{padding:16px}}
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+
+<div class="hero">
+  <h1>📸 我们的回忆</h1>
+  <p>每一张照片都是一个故事 · 每一刻都值得铭记</p>
+</div>
+
+<div class="container">
+
+  <div class="photo-stats">
+    <div class="big" id="photoCount">0</div>
+    <div class="lbl">个美好瞬间</div>
+  </div>
+
+  <div id="gallery"></div>
+
+  <div class="hint-card">
+    <div class="emoji">📷</div>
+    <div class="text">这里是示例照片<br>后续可以替换成你们自己的照片<br>只需把图片放到 <b>images/</b> 文件夹<br>然后在代码的 photos 数组中添加</div>
+  </div>
+
+</div>
+
+<div class="footer">📸 最好的风景 · 是有你在的画面</div>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox">
+  <button class="lb-close" onclick="closeLB()">✕</button>
+  <button class="lb-nav lb-prev" onclick="lbNav(-1)">‹</button>
+  <button class="lb-nav lb-next" onclick="lbNav(1)">›</button>
+  <img class="lb-img" id="lbImg" src="" alt="">
+  <div class="lb-caption" id="lbCaption"></div>
+</div>
+
+<script>
+const photos=[
+  {
+    src:'images/album_1.png',
+    date:'2025-10-12',
+    title:'在一起的那天',
+    caption:'就是这一天，我成了世界上最幸运的人。夕阳下的你特别美，像这张照片里的光一样温暖。',
+    tag:'love',tagText:'甜蜜'
+  },
+  {
+    src:'images/album_2.png',
+    date:'2025-12-24',
+    title:'第一个圣诞节',
+    caption:'德国的圣诞市场真的好美！虽然只能在视频里看你逛，但热红酒的温暖仿佛隔着屏幕都能感受到。',
+    tag:'travel',tagText:'旅行'
+  },
+  {
+    src:'images/album_3.png',
+    date:'2026-03-15',
+    title:'春天的约定',
+    caption:'等到春天花开的时候去看你。这张照片虽然是风景，但我看到的全是思念。下次一定要一起赏花。',
+    tag:'travel',tagText:'旅行'
+  },
+];
+
+let currentLB=0;
+
+function renderGallery(){
+  const g=document.getElementById('gallery');
+  document.getElementById('photoCount').textContent=photos.length;
+  g.innerHTML=photos.map((p,i)=>`<div class="gallery-card" onclick="openLB(${i})">
+    <img class="gc-img" src="${p.src}" alt="${p.title}" loading="lazy">
+    <div class="gc-body">
+      <div class="gc-date">📅 ${new Date(p.date).toLocaleDateString('zh-CN',{year:'numeric',month:'long',day:'numeric'})}</div>
+      <div class="gc-title">${p.title}</div>
+      <div class="gc-caption">${p.caption}</div>
+      <span class="gc-tag ${p.tag}">${p.tagText}</span>
+    </div>
+  </div>`).join('');
+}
+renderGallery();
+
+function openLB(idx){
+  currentLB=idx;
+  updateLB();
+  document.getElementById('lightbox').classList.add('show');
+  document.body.style.overflow='hidden';
+}
+function closeLB(){
+  document.getElementById('lightbox').classList.remove('show');
+  document.body.style.overflow='';
+}
+function lbNav(dir){
+  currentLB=(currentLB+dir+photos.length)%photos.length;
+  updateLB();
+}
+function updateLB(){
+  const p=photos[currentLB];
+  document.getElementById('lbImg').src=p.src;
+  document.getElementById('lbCaption').textContent=p.caption;
+}
+
+document.getElementById('lightbox').addEventListener('click',function(e){
+  if(e.target===this)closeLB();
+});
+
+// Swipe support
+let touchX=0;
+document.getElementById('lightbox').addEventListener('touchstart',e=>{touchX=e.touches[0].clientX;},{passive:true});
+document.getElementById('lightbox').addEventListener('touchend',e=>{
+  const diff=e.changedTouches[0].clientX-touchX;
+  if(Math.abs(diff)>50){lbNav(diff>0?-1:1);}
+},{passive:true});
+
+// Progress
+window.addEventListener('scroll',()=>{
+  const h=document.documentElement;
+  const p=(h.scrollTop/(h.scrollHeight-h.clientHeight))*100;
+  document.getElementById('progress').style.width=p+'%';
+},{passive:true});
+</script>
+</body>
+</html>

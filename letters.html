@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>💌 给你的信</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{min-height:100vh;background:#0f0f23;font-family:"PingFang SC","Microsoft YaHei",sans-serif;color:#e0e0e0;overflow-x:hidden;touch-action:manipulation}
+
+.hero{text-align:center;padding:50px 20px 20px;position:relative;z-index:1}
+.hero h1{font-size:32px;background:linear-gradient(90deg,#ec4899,#f97316,#ec4899);background-size:200%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:shimmer 3s linear infinite}
+@keyframes shimmer{0%{background-position:0%}100%{background-position:200%}}
+.hero p{color:#6b7280;font-size:14px;margin-top:8px}
+
+.container{max-width:600px;margin:0 auto;padding:0 16px 40px;position:relative;z-index:1}
+
+/* Envelope */
+.envelope-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin:20px 0}
+.envelope{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:24px 16px;text-align:center;cursor:pointer;transition:all 0.3s;position:relative;-webkit-user-select:none;user-select:none}
+.envelope:active{transform:scale(0.95);transition:all 0.1s}
+.envelope.opened{border-color:rgba(236,72,153,0.3);background:rgba(236,72,153,0.05)}
+.envelope.locked{opacity:0.5;cursor:default}
+.envelope.locked:active{transform:none}
+.env-icon{font-size:40px;margin-bottom:8px;transition:transform 0.3s}
+.envelope.opened .env-icon{transform:rotate(-15deg)}
+.env-num{font-size:22px;font-weight:700;color:#ec4899;margin-bottom:4px}
+.env-date{font-size:12px;color:#6b7280}
+.env-lock{position:absolute;top:10px;right:10px;font-size:16px}
+
+/* Letter overlay */
+.letter-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:200;display:none;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(10px)}
+.letter-overlay.show{display:flex}
+.letter-box{background:linear-gradient(135deg,#1a1a2e,#16213e);border:1px solid rgba(236,72,153,0.2);border-radius:24px;padding:36px 28px;max-width:500px;width:100%;position:relative;animation:letterPop 0.5s cubic-bezier(0.34,1.56,0.64,1)}
+@keyframes letterPop{from{opacity:0;transform:scale(0.8) translateY(20px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.letter-close{position:absolute;top:16px;right:16px;width:32px;height:32px;border-radius:50%;border:1px solid rgba(255,255,255,0.1);background:transparent;color:#9ca3af;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.letter-header{text-align:center;margin-bottom:20px}
+.letter-header .emoji{font-size:40px;margin-bottom:8px}
+.letter-header .title{font-size:18px;font-weight:700;color:#ec4899}
+.letter-header .date{font-size:13px;color:#6b7280;margin-top:4px}
+.letter-content{color:#d1d5db;font-size:15px;line-height:2.2}
+.letter-content p{margin-bottom:8px}
+.letter-sig{text-align:right;color:#ec4899;font-style:italic;margin-top:20px;font-size:14px}
+
+/* Stats */
+.stats-card{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:24px;text-align:center;margin:20px 0}
+.stats-row{display:flex;justify-content:center;gap:32px;margin-top:12px}
+.stat-item .val{font-size:28px;font-weight:700;color:#ec4899}
+.stat-item .lbl{font-size:12px;color:#6b7280;margin-top:4px}
+
+.particles{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.particles span{position:absolute;animation:pFloat linear infinite;opacity:0}
+@keyframes pFloat{0%{transform:translateY(100vh);opacity:0}20%{opacity:0.12}100%{transform:translateY(-10vh);opacity:0}}
+
+.footer{text-align:center;padding:40px 20px;color:#374151;font-size:13px;position:relative;z-index:1}
+.progress{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,#ec4899,#f97316);z-index:100;transition:width 0.1s}
+
+@media(max-width:600px){.hero h1{font-size:26px}.envelope-grid{gap:10px}.envelope{padding:20px 12px}.letter-box{padding:28px 20px}}
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+<div class="particles" id="particles"></div>
+
+<div class="hero">
+  <h1>💌 给你的信</h1>
+  <p>每一封都是心里话 · 有些要等日子到了才能拆</p>
+</div>
+
+<div class="container">
+
+  <div class="stats-card">
+    <div style="font-size:18px;color:#c4b5fd">📬 信件状态</div>
+    <div class="stats-row">
+      <div class="stat-item"><div class="val" id="openedCount">0</div><div class="lbl">已拆开</div></div>
+      <div class="stat-item"><div class="val" id="totalCount">0</div><div class="lbl">总共</div></div>
+      <div class="stat-item"><div class="val" id="lockedCount">0</div><div class="lbl">待解锁</div></div>
+    </div>
+  </div>
+
+  <div class="envelope-grid" id="envelopeGrid"></div>
+
+</div>
+
+<div class="footer">💌 每一封信都是真心 · 请小心收藏</div>
+
+<!-- Letter overlay -->
+<div class="letter-overlay" id="letterOverlay">
+  <div class="letter-box">
+    <button class="letter-close" onclick="closeLetter()">✕</button>
+    <div class="letter-header">
+      <div class="emoji" id="ltrEmoji">💌</div>
+      <div class="title" id="ltrTitle">信件标题</div>
+      <div class="date" id="ltrDate">日期</div>
+    </div>
+    <div class="letter-content" id="ltrContent"></div>
+    <div class="letter-sig" id="ltrSig">—— 你的男友</div>
+  </div>
+</div>
+
+<script>
+// Particles
+(function(){
+  const bg=document.getElementById('particles');
+  const items=['💌','💗','✉️','💕','🩷'];
+  for(let i=0;i<20;i++){
+    const s=document.createElement('span');
+    s.textContent=items[Math.floor(Math.random()*items.length)];
+    s.style.left=Math.random()*100+'%';
+    s.style.fontSize=(10+Math.random()*14)+'px';
+    s.style.animationDuration=(10+Math.random()*12)+'s';
+    s.style.animationDelay=Math.random()*12+'s';
+    bg.appendChild(s);
+  }
+})();
+
+const letters=[
+  {
+    date:'2025-10-12',emoji:'💕',title:'写在在一起的第一天',
+    content:'<p>你好呀，这是写给你的第一封信。</p><p>从今天起，我正式成为你的男朋友了。</p><p>说实话有点紧张，但更多的是开心。</p><p>我会好好珍惜你，好好对你。</p><p>虽然你在德国，我在中国，但距离不会改变我的心。</p>'
+  },
+  {
+    date:'2025-11-12',emoji:'🌙',title:'第一个月',
+    content:'<p>在一起一个月了！</p><p>这一个月，我学会了算时差、查德国天气、还偷学了几句德语。</p><p>Ich liebe dich，这句我学得最快。</p><p>以后每个月都要写一封。</p>'
+  },
+  {
+    date:'2025-12-24',emoji:'🎄',title:'圣诞快乐',
+    content:'<p>Frohe Weihnachten！</p><p>德国的圣诞节一定很美吧，有圣诞市场、热红酒和好多灯。</p><p>可惜我不在你身边。</p><p>不过没关系，圣诞礼物已经寄出去了，应该就快到了。</p><p>明年圣诞，我一定陪你一起过。</p>'
+  },
+  {
+    date:'2026-01-01',emoji:'🎆',title:'2026年的第一封信',
+    content:'<p>新的一年，新的开始。</p><p>去年10月认识你是我最大的幸运。</p><p>新年愿望：多见几次面，你博士顺利。</p><p>不管什么时候毕业，我都等你。</p><p>2026，请对我女朋友好一点。</p>'
+  },
+  {
+    date:'2026-01-29',emoji:'🧧',title:'春节快乐',
+    content:'<p>过年啦！虽然不能一起吃年夜饭。</p><p>家里人问我有没有对象，我说有，在德国读博。</p><p>他们说：好优秀啊！我说：那当然，我眼光多好。</p><p>等你回来，带你见他们。</p>'
+  },
+  {
+    date:'2026-02-14',emoji:'💝',title:'情人节',
+    content:'<p>在一起后的第一个情人节。</p><p>没法送你花，没法一起吃晚餐。</p><p>但你知道吗，今天我把你的照片设成了手机壁纸。</p><p>嗯，其实一直都是。</p><p>Happy Valentine\'s Day，我最爱的人。</p>'
+  },
+  {
+    date:'2026-04-12',emoji:'🎂',title:'在一起半年',
+    content:'<p>半年了！</p><p>182天，大概视频通话了170天，说了10000次"想你"。</p><p>谢谢你选择了我，谢谢你愿意和我一起扛过这段异地。</p><p>下半年，继续一起走。</p>'
+  },
+  {
+    date:'2026-06-01',emoji:'🌸',title:'夏天来了',
+    content:'<p>六月了，德国应该开始热了吧？</p><p>出门走走，看看花，晒晒太阳。</p><p>替我呼吸一下德国夏天的空气。</p><p>等放暑假我就来看你！</p>'
+  },
+  {
+    date:'2026-10-12',emoji:'💎',title:'写在一周年',
+    content:'<p>如果你正在看这封信，说明我们一起走过了365天。</p><p>一年的异地恋，说起来轻松，走过来不容易。</p><p>但我从未后悔。</p><p>因为终点是你，所以路上的一切都值得。</p><p>我爱你，一年前如此，现在更甚。</p>'
+  },
+];
+
+const openedSet=new Set(JSON.parse(localStorage.getItem('openedLetters')||'[]'));
+
+function renderEnvelopes(){
+  const grid=document.getElementById('envelopeGrid');
+  const now=new Date();
+  let opened=0,locked=0;
+  grid.innerHTML=letters.map((l,i)=>{
+    const unlockDate=new Date(l.date);
+    const isLocked=now<unlockDate;
+    const isOpened=openedSet.has(i);
+    if(isOpened)opened++;
+    if(isLocked)locked++;
+    return `<div class="envelope${isOpened?' opened':''}${isLocked?' locked':''}" onclick="${isLocked?'':'openLetter('+i+')'}" data-idx="${i}">
+      ${isLocked?'<div class="env-lock">🔒</div>':''}
+      <div class="env-icon">${isLocked?'✉️':isOpened?'💌':'📩'}</div>
+      <div class="env-num">#${i+1}</div>
+      <div class="env-date">${isLocked?unlockDate.toLocaleDateString('zh-CN',{month:'long',day:'numeric'})+'解锁':l.title}</div>
+    </div>`;
+  }).join('');
+  document.getElementById('openedCount').textContent=opened;
+  document.getElementById('totalCount').textContent=letters.length;
+  document.getElementById('lockedCount').textContent=locked;
+}
+
+function openLetter(idx){
+  const l=letters[idx];
+  openedSet.add(idx);
+  localStorage.setItem('openedLetters',JSON.stringify([...openedSet]));
+  document.getElementById('ltrEmoji').textContent=l.emoji;
+  document.getElementById('ltrTitle').textContent=l.title;
+  document.getElementById('ltrDate').textContent=new Date(l.date).toLocaleDateString('zh-CN',{year:'numeric',month:'long',day:'numeric'});
+  document.getElementById('ltrContent').innerHTML=l.content;
+  document.getElementById('letterOverlay').classList.add('show');
+  document.body.style.overflow='hidden';
+  renderEnvelopes();
+}
+
+function closeLetter(){
+  document.getElementById('letterOverlay').classList.remove('show');
+  document.body.style.overflow='';
+}
+
+document.getElementById('letterOverlay').addEventListener('click',function(e){
+  if(e.target===this)closeLetter();
+});
+
+renderEnvelopes();
+
+// Progress
+window.addEventListener('scroll',()=>{
+  const h=document.documentElement;
+  const p=(h.scrollTop/(h.scrollHeight-h.clientHeight))*100;
+  document.getElementById('progress').style.width=p+'%';
+},{passive:true});
+</script>
+</body>
+</html>

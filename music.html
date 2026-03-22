@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>🎵 我们的音乐盒</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{min-height:100vh;background:#0a0a1a;font-family:"PingFang SC","Microsoft YaHei",sans-serif;color:#e0e0e0;overflow-x:hidden;touch-action:manipulation}
+
+.hero{text-align:center;padding:50px 20px 20px;position:relative;z-index:1}
+.hero h1{font-size:32px;background:linear-gradient(90deg,#06b6d4,#8b5cf6,#ec4899);background-size:300%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:shimmer 4s linear infinite}
+@keyframes shimmer{0%{background-position:0%}100%{background-position:300%}}
+.hero p{color:#6b7280;font-size:14px;margin-top:8px}
+
+.container{max-width:600px;margin:0 auto;padding:0 16px 40px;position:relative;z-index:1}
+
+/* Now playing */
+.now-playing{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:24px;padding:32px;text-align:center;margin:20px 0;position:relative;overflow:hidden}
+.now-playing::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 50%,rgba(139,92,246,0.1),transparent 70%);pointer-events:none}
+.np-disc{width:120px;height:120px;border-radius:50%;border:3px solid rgba(139,92,246,0.3);margin:0 auto 16px;display:flex;align-items:center;justify-content:center;font-size:56px;animation:discSpin 8s linear infinite;animation-play-state:paused}
+.np-disc.playing{animation-play-state:running;border-color:rgba(139,92,246,0.6);box-shadow:0 0 30px rgba(139,92,246,0.2)}
+@keyframes discSpin{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}
+.np-title{font-size:20px;font-weight:700;margin-bottom:4px}
+.np-artist{font-size:14px;color:#9ca3af}
+.np-reason{font-size:14px;color:#c4b5fd;margin-top:12px;line-height:1.6;font-style:italic}
+.np-controls{display:flex;justify-content:center;gap:24px;margin-top:20px}
+.np-btn{width:48px;height:48px;border-radius:50%;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.04);font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.3s;-webkit-user-select:none;user-select:none}
+.np-btn:active{transform:scale(0.9);background:rgba(139,92,246,0.2);transition:all 0.1s}
+.np-btn.play-btn{width:56px;height:56px;font-size:24px;background:linear-gradient(135deg,#8b5cf6,#06b6d4);border:none}
+
+/* Equalizer bars */
+.eq-bars{display:flex;gap:3px;justify-content:center;height:24px;align-items:flex-end;margin:16px 0}
+.eq-bar{width:4px;background:#8b5cf6;border-radius:2px;transition:height 0.15s}
+
+/* Song list */
+.section-title{font-size:18px;color:#c4b5fd;margin:28px 0 14px;text-align:center}
+.song-card{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:18px 20px;margin-bottom:10px;cursor:pointer;transition:all 0.3s;display:flex;align-items:center;gap:14px;-webkit-user-select:none;user-select:none}
+.song-card:active{transform:scale(0.97);border-color:rgba(139,92,246,0.3);transition:all 0.1s}
+.song-card.active{border-color:#8b5cf6;background:rgba(139,92,246,0.08)}
+.song-emoji{font-size:32px;flex-shrink:0}
+.song-info{flex:1;min-width:0}
+.song-name{font-size:15px;font-weight:600;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.song-artist{font-size:13px;color:#9ca3af}
+.song-tag{padding:3px 10px;border-radius:12px;font-size:11px;background:rgba(139,92,246,0.15);color:#c4b5fd;flex-shrink:0}
+
+/* Lyrics */
+.lyrics-card{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:28px;margin:16px 0;text-align:center}
+.lyrics-card .lyric{font-size:18px;color:#e0e0e0;line-height:2;font-style:italic}
+.lyrics-card .lyric-from{font-size:13px;color:#6b7280;margin-top:12px}
+
+.particles{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.particles span{position:absolute;animation:noteFloat linear infinite;opacity:0}
+@keyframes noteFloat{0%{transform:translateY(100vh) rotate(0);opacity:0}20%{opacity:0.12}100%{transform:translateY(-10vh) rotate(360deg);opacity:0}}
+
+.footer{text-align:center;padding:40px 20px;color:#374151;font-size:13px;position:relative;z-index:1}
+.progress{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,#06b6d4,#8b5cf6);z-index:100;transition:width 0.1s}
+
+@media(max-width:600px){.hero h1{font-size:26px}.np-disc{width:100px;height:100px;font-size:44px}}
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+<div class="particles" id="particles"></div>
+
+<div class="hero">
+  <h1>🎵 我们的音乐盒</h1>
+  <p>每一首歌都藏着一个关于你的故事</p>
+</div>
+
+<div class="container">
+
+  <!-- Now Playing -->
+  <div class="now-playing">
+    <div class="np-disc" id="disc">🎵</div>
+    <div class="eq-bars" id="eqBars"></div>
+    <div class="np-title" id="npTitle">选一首歌</div>
+    <div class="np-artist" id="npArtist">点击下方歌单开始</div>
+    <div class="np-reason" id="npReason"></div>
+    <div class="np-controls">
+      <div class="np-btn" onclick="prevSong()">⏮</div>
+      <div class="np-btn play-btn" id="playBtn" onclick="togglePlay()">▶</div>
+      <div class="np-btn" onclick="nextSong()">⏭</div>
+    </div>
+  </div>
+
+  <!-- Featured lyric -->
+  <div class="lyrics-card">
+    <div class="lyric" id="lyricText">"最好的风景是眼前开始泛滥的笑意"</div>
+    <div class="lyric-from" id="lyricFrom">—— 等你下课 · 周杰伦</div>
+  </div>
+
+  <!-- Song list -->
+  <div class="section-title">🎶 专属歌单</div>
+  <div id="songList"></div>
+
+</div>
+
+<div class="footer">🎵 给你最好的旋律 · 因为你是我最好的选择</div>
+
+<script>
+// Particles
+(function(){
+  const bg=document.getElementById('particles');
+  const notes=['🎵','🎶','🎼','♪','♫','✨'];
+  for(let i=0;i<20;i++){
+    const s=document.createElement('span');
+    s.textContent=notes[Math.floor(Math.random()*notes.length)];
+    s.style.left=Math.random()*100+'%';
+    s.style.fontSize=(12+Math.random()*16)+'px';
+    s.style.animationDuration=(10+Math.random()*15)+'s';
+    s.style.animationDelay=Math.random()*12+'s';
+    bg.appendChild(s);
+  }
+})();
+
+// Equalizer bars
+const eqContainer=document.getElementById('eqBars');
+for(let i=0;i<12;i++){
+  const bar=document.createElement('div');
+  bar.className='eq-bar';
+  bar.style.height='4px';
+  eqContainer.appendChild(bar);
+}
+
+const songs=[
+  {emoji:'🌙',name:'月亮代表我的心',artist:'邓丽君',tag:'经典',reason:'每次听到这首歌都会想你，月亮替我说了那些害羞的话',lyric:'"你问我爱你有多深，月亮代表我的心"'},
+  {emoji:'🎓',name:'等你下课',artist:'周杰伦',tag:'甜蜜',reason:'虽然等的不是下课，是等你毕业回来',lyric:'"最好的风景是眼前开始泛滥的笑意"'},
+  {emoji:'✈️',name:'漂洋过海来看你',artist:'李宗盛/娃娃',tag:'异地',reason:'每次买机票的时候这首歌单曲循环',lyric:'"为你我用了半年的积蓄，漂洋过海的来看你"'},
+  {emoji:'🌸',name:'告白气球',artist:'周杰伦',tag:'浪漫',reason:'想给你一百万个气球，装满我所有的喜欢',lyric:'"亲爱的爱上你从那天起，甜蜜的很轻易"'},
+  {emoji:'💫',name:'小幸运',artist:'田馥甄',tag:'命中注定',reason:'遇见你是我最大的小幸运',lyric:'"我听见雨滴落在青青草地，我听见远方下课钟声响起"'},
+  {emoji:'🏠',name:'稳稳的幸福',artist:'陈奕迅',tag:'温暖',reason:'不需要多惊天动地，有你就是稳稳的幸福',lyric:'"有一天开始从平凡中感受幸运"'},
+  {emoji:'🌊',name:'海阔天空',artist:'Beyond',tag:'力量',reason:'读博不容易，这首歌送给坚持的你',lyric:'"原谅我这一生不羁放纵爱自由"'},
+  {emoji:'🍃',name:'可能否',artist:'木小雅',tag:'清新',reason:'轻轻的旋律像你的性格，温柔又坚定',lyric:'"可能我撞了南墙才会回头吧"'},
+  {emoji:'🌟',name:'夜空中最亮的星',artist:'逃跑计划',tag:'想念',reason:'你就是我夜空中最亮的那颗星',lyric:'"每当我找不到存在的意义，每当我迷失在黑夜里"'},
+  {emoji:'☕',name:'Lemon',artist:'米津玄師',tag:'日语',reason:'在德国的咖啡馆听到这首歌，突然好想你',lyric:'"切り分けた果実の片方の様に"'},
+];
+
+let currentIdx=-1;
+let isPlaying=false;
+let eqInterval=null;
+
+function renderSongList(){
+  const list=document.getElementById('songList');
+  list.innerHTML=songs.map((s,i)=>`<div class="song-card${i===currentIdx?' active':''}" onclick="playSong(${i})"><div class="song-emoji">${s.emoji}</div><div class="song-info"><div class="song-name">${s.name}</div><div class="song-artist">${s.artist}</div></div><div class="song-tag">${s.tag}</div></div>`).join('');
+}
+renderSongList();
+
+function playSong(idx){
+  currentIdx=idx;
+  const s=songs[idx];
+  document.getElementById('npTitle').textContent=s.name;
+  document.getElementById('npArtist').textContent=s.artist;
+  document.getElementById('npReason').textContent='💭 '+s.reason;
+  document.getElementById('lyricText').textContent=s.lyric;
+  document.getElementById('lyricFrom').textContent='—— '+s.name+' · '+s.artist;
+  document.getElementById('disc').textContent=s.emoji;
+  isPlaying=true;
+  updatePlayState();
+  renderSongList();
+  document.querySelector('.now-playing').scrollIntoView({behavior:'smooth',block:'center'});
+}
+
+function togglePlay(){
+  if(currentIdx===-1){playSong(0);return;}
+  isPlaying=!isPlaying;
+  updatePlayState();
+}
+
+function prevSong(){playSong(currentIdx<=0?songs.length-1:currentIdx-1);}
+function nextSong(){playSong(currentIdx>=songs.length-1?0:currentIdx+1);}
+
+function updatePlayState(){
+  const disc=document.getElementById('disc');
+  const btn=document.getElementById('playBtn');
+  if(isPlaying){
+    disc.classList.add('playing');
+    btn.textContent='⏸';
+    startEQ();
+  }else{
+    disc.classList.remove('playing');
+    btn.textContent='▶';
+    stopEQ();
+  }
+}
+
+function startEQ(){
+  if(eqInterval)return;
+  eqInterval=setInterval(()=>{
+    document.querySelectorAll('.eq-bar').forEach(b=>{
+      b.style.height=(4+Math.random()*20)+'px';
+      b.style.background=`hsl(${260+Math.random()*60},70%,60%)`;
+    });
+  },150);
+}
+function stopEQ(){
+  clearInterval(eqInterval);
+  eqInterval=null;
+  document.querySelectorAll('.eq-bar').forEach(b=>{b.style.height='4px';b.style.background='#8b5cf6';});
+}
+
+// Auto rotate lyrics
+const allLyrics=songs.map(s=>({lyric:s.lyric,from:s.name+' · '+s.artist}));
+let lyricRotate;
+function startLyricRotate(){
+  lyricRotate=setInterval(()=>{
+    if(isPlaying)return;
+    const r=allLyrics[Math.floor(Math.random()*allLyrics.length)];
+    const el=document.getElementById('lyricText');
+    el.style.opacity=0;
+    setTimeout(()=>{
+      el.textContent=r.lyric;
+      document.getElementById('lyricFrom').textContent='—— '+r.from;
+      el.style.opacity=1;
+      el.style.transition='opacity 0.5s';
+    },300);
+  },5000);
+}
+startLyricRotate();
+
+// Progress
+window.addEventListener('scroll',()=>{
+  const h=document.documentElement;
+  const p=(h.scrollTop/(h.scrollHeight-h.clientHeight))*100;
+  document.getElementById('progress').style.width=p+'%';
+},{passive:true});
+</script>
+</body>
+</html>
