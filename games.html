@@ -40,7 +40,61 @@ body{min-height:100vh;background:#0a0a1a;font-family:"PingFang SC","Microsoft Ya
 .btn-small{background:rgba(255,255,255,0.06);color:#facc15;border:1px solid rgba(250,204,21,0.3);padding:8px 20px;font-size:13px}
 .footer{text-align:center;padding:40px 20px;color:#374151;font-size:13px;position:relative;z-index:1}
 .progress{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,#facc15,#f97316);z-index:100;transition:width 0.1s}
-@media(max-width:600px){.hero h1{font-size:26px}.memory-grid{max-width:280px;gap:6px}}
+.canvas-wrap{display:flex;justify-content:center;max-width:100%;margin:18px auto 0}
+.canvas-wrap.square{max-width:320px}
+.game-canvas{display:block;width:100%;height:auto;border-radius:18px;border:1px solid rgba(250,204,21,0.14);background:radial-gradient(circle at top,#1f2937,#0f172a 58%,#020617);box-shadow:inset 0 1px 0 rgba(255,255,255,0.05)}
+.snake-controls{display:flex;flex-direction:column;align-items:center;gap:10px;margin-top:18px}
+.snake-hint{font-size:12px;color:#6b7280}
+.snake-pad{display:grid;grid-template-columns:repeat(3,56px);gap:8px}
+.d-btn{width:56px;height:56px;border-radius:18px;border:1px solid rgba(250,204,21,0.28);background:rgba(250,204,21,0.12);color:#facc15;font-size:24px;font-weight:700;cursor:pointer;font-family:inherit}
+.d-btn:active{transform:scale(0.92)}
+.d-space{visibility:hidden}
+.mine-grid{display:grid;grid-template-columns:repeat(8,36px);gap:4px;justify-content:center;max-width:320px;margin:0 auto}
+.mine-cell{width:36px;height:36px;border-radius:10px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:#e5e7eb;cursor:pointer;font-family:inherit;padding:0;-webkit-user-select:none;user-select:none}
+.mine-cell:active{transform:scale(0.95)}
+.mine-cell.revealed{background:rgba(255,255,255,0.1);border-color:rgba(255,255,255,0.08)}
+.mine-cell.flagged{background:rgba(250,204,21,0.16);color:#facc15;border-color:rgba(250,204,21,0.3)}
+.mine-cell.mine{background:rgba(239,68,68,0.2);color:#f87171;border-color:rgba(239,68,68,0.3)}
+.mine-cell[data-count="1"]{color:#60a5fa}
+.mine-cell[data-count="2"]{color:#4ade80}
+.mine-cell[data-count="3"]{color:#f87171}
+.mine-cell[data-count="4"]{color:#c084fc}
+.mine-cell[data-count="5"]{color:#f97316}
+.mine-cell[data-count="6"]{color:#22d3ee}
+.mine-cell[data-count="7"]{color:#f9fafb}
+.mine-cell[data-count="8"]{color:#facc15}
+.breakout-tip{text-align:center;color:#6b7280;font-size:13px;margin-top:12px}
+
+/* Guess number */
+.guess-input{width:120px;padding:12px;border-radius:12px;border:2px solid rgba(250,204,21,0.3);background:rgba(255,255,255,0.06);color:#facc15;font-size:24px;text-align:center;font-family:inherit;font-weight:700;outline:none;transition:border-color 0.3s}
+.guess-input:focus{border-color:#facc15}
+.guess-history{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:16px}
+.guess-tag{padding:4px 12px;border-radius:20px;font-size:13px;font-weight:600}
+.guess-tag.high{background:rgba(239,68,68,0.15);color:#f87171}
+.guess-tag.low{background:rgba(96,165,250,0.15);color:#60a5fa}
+.guess-tag.hit{background:rgba(52,211,153,0.2);color:#34d399}
+
+/* Simon colors */
+.simon-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;max-width:240px;margin:0 auto}
+.simon-btn{aspect-ratio:1;border-radius:16px;border:2px solid transparent;cursor:pointer;transition:all 0.15s;opacity:0.5}
+.simon-btn:active{transform:scale(0.92)}
+.simon-btn.lit{opacity:1;transform:scale(1.05);box-shadow:0 0 20px currentColor}
+.simon-btn[data-c="0"]{background:#ef4444;color:#ef4444}
+.simon-btn[data-c="1"]{background:#3b82f6;color:#3b82f6}
+.simon-btn[data-c="2"]{background:#22c55e;color:#22c55e}
+.simon-btn[data-c="3"]{background:#facc15;color:#facc15}
+
+/* Typing */
+.type-display{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:16px;padding:20px;text-align:center;font-size:20px;line-height:1.8;margin-bottom:16px;min-height:80px;color:#6b7280;letter-spacing:1px}
+.type-display .done{color:#34d399}
+.type-display .cur{color:#facc15;border-bottom:2px solid #facc15}
+.type-display .rest{color:#4b5563}
+.type-input{width:100%;padding:14px;border-radius:12px;border:2px solid rgba(250,204,21,0.2);background:rgba(255,255,255,0.04);color:#e0e0e0;font-size:16px;font-family:inherit;outline:none;text-align:center;transition:border-color 0.3s}
+.type-input:focus{border-color:#facc15}
+.type-timer{width:100%;height:6px;border-radius:3px;background:rgba(255,255,255,0.06);margin:12px 0;overflow:hidden}
+.type-timer-bar{height:100%;border-radius:3px;background:linear-gradient(90deg,#34d399,#facc15,#ef4444);transition:width 0.1s linear}
+
+@media(max-width:600px){.hero h1{font-size:26px}.memory-grid{max-width:280px;gap:6px}.simon-grid{max-width:200px}.snake-pad{grid-template-columns:repeat(3,48px)}.d-btn{width:48px;height:48px;border-radius:16px;font-size:22px}.mine-grid{grid-template-columns:repeat(8,minmax(0,1fr));max-width:320px}.mine-cell{width:100%;height:auto;aspect-ratio:1}}
 </style>
 </head>
 <body>
@@ -51,23 +105,46 @@ body{min-height:100vh;background:#0a0a1a;font-family:"PingFang SC","Microsoft Ya
 <button class="g-tab active" data-game="memory">🧠 记忆翻牌</button>
 <button class="g-tab" data-game="reaction">⚡ 反应测试</button>
 <button class="g-tab" data-game="catch">🎯 接Emoji</button>
+<button class="g-tab" data-game="guess">🔢 猜数字</button>
+<button class="g-tab" data-game="simon">🎨 颜色记忆</button>
+<button class="g-tab" data-game="typing">✍️ 情话打字</button>
+<button class="g-tab" data-game="snake">🐍 贪吃蛇</button>
+<button class="g-tab" data-game="mine">💣 迷你扫雷</button>
+<button class="g-tab" data-game="runner">🏃 跳跳小人</button>
+<button class="g-tab" data-game="breakout">🏓 弹球打砖块</button>
 </div>
 <div class="game-area" id="gameArea"></div>
 </div>
 <div class="footer">🧩 玩完了就回去写论文 · 但先玩完再说</div>
 <script>
-let currentGame='memory';
+let currentGame='memory',gameCleanups=[];
+function addGameCleanup(fn){gameCleanups.push(fn);}
+function runGameCleanups(){
+while(gameCleanups.length){
+const cleanup=gameCleanups.pop();
+try{cleanup&&cleanup();}catch(err){console.error(err);}
+}
+}
 document.querySelector('.game-tabs').addEventListener('click',function(e){
 const btn=e.target.closest('.g-tab');if(!btn)return;
 document.querySelectorAll('.g-tab').forEach(t=>t.classList.remove('active'));
 btn.classList.add('active');currentGame=btn.dataset.game;loadGame();
 });
 function loadGame(){
+runGameCleanups();
 if(currentGame==='memory')initMemory();
 else if(currentGame==='reaction')initReaction();
 else if(currentGame==='catch')initCatch();
+else if(currentGame==='guess')initGuess();
+else if(currentGame==='simon')initSimon();
+else if(currentGame==='typing')initTyping();
+else if(currentGame==='snake')initSnake();
+else if(currentGame==='mine')initMine();
+else if(currentGame==='runner')initRunner();
+else if(currentGame==='breakout')initBreakout();
 }
-// MEMORY
+
+// ============ MEMORY ============
 const memEmojis=['🐱','🐶','🐻','🐼','🦊','🐰','🐸','🦄'];
 let memFlipped=[],memMatched=0,memMoves=0,memLocked=false;
 function initMemory(){
@@ -86,7 +163,8 @@ if(a.dataset.e===b.dataset.e){a.classList.add('matched');b.classList.add('matche
 if(memMatched===8)setTimeout(()=>document.querySelector('.game-info').innerHTML='🎉 '+memMoves+'步完成！',300);
 }else{setTimeout(()=>{a.classList.add('hidden');a.textContent='';b.classList.add('hidden');b.textContent='';memFlipped=[];memLocked=false;},600);}}};
 }
-// REACTION
+
+// ============ REACTION ============
 let rTimeout,rStart;
 function initReaction(){
 const best=localStorage.getItem('rBest')||'---';
@@ -99,7 +177,8 @@ rTimeout=setTimeout(()=>{z.className='reaction-zone rz-go';z.textContent='点我
 }else if(z.classList.contains('rz-go')){const t=Math.round(performance.now()-rStart);z.className='reaction-zone rz-result';z.textContent=t+'ms · 再来';document.getElementById('rTime').textContent=t;
 const b=localStorage.getItem('rBest');if(!b||t<parseInt(b)){localStorage.setItem('rBest',t);document.getElementById('rBest').textContent=t;}}};
 }
-// CATCH
+
+// ============ CATCH ============
 let cScore,cMiss,cIv,cActive=false;
 function initCatch(){
 cScore=0;cMiss=0;cActive=false;
@@ -125,6 +204,867 @@ document.getElementById('cInfo').innerHTML='结束！得分 <b>'+cScore+'</b>';d
 const b=parseInt(localStorage.getItem('cBest')||'0');
 if(cScore>b){localStorage.setItem('cBest',cScore);document.getElementById('cBest').textContent=cScore;document.getElementById('cInfo').innerHTML+=' 🎉 新纪录！';}
 }
+
+// ============ SNAKE ============
+const snakeFoods=['🍎','🍕','🍩','🍓','🧁','🍪'];
+const snakeDirections={up:{x:0,y:-1},down:{x:0,y:1},left:{x:-1,y:0},right:{x:1,y:0}};
+let snakeState=null;
+function initSnake(){
+const best=parseInt(localStorage.getItem('snakeBest')||'0');
+const a=document.getElementById('gameArea');
+a.innerHTML='<h3>🐍 贪吃蛇</h3><div class="game-info" id="snakeInfo">方向键或下方按钮控制，吃到 5 个食物会加速</div><div class="score-bar"><div class="score-item"><div class="val" id="snakeScore">0</div><div class="lbl">得分</div></div><div class="score-item"><div class="val" id="snakeBest">'+best+'</div><div class="lbl">最高</div></div><div class="score-item"><div class="val" id="snakeSpeed">150</div><div class="lbl">步频(ms)</div></div></div><div class="canvas-wrap square"><canvas class="game-canvas" id="snakeCanvas" width="300" height="300" aria-label="贪吃蛇游戏画布"></canvas></div><div class="snake-controls" id="snakeControls"><div class="snake-hint">手机可直接点按方向键</div><div class="snake-pad"><span class="d-space"></span><button class="d-btn" type="button" data-dir="up">↑</button><span class="d-space"></span><button class="d-btn" type="button" data-dir="left">←</button><span class="d-space"></span><button class="d-btn" type="button" data-dir="right">→</button><span class="d-space"></span><button class="d-btn" type="button" data-dir="down">↓</button><span class="d-space"></span></div></div><div style="text-align:center;margin-top:16px"><button class="btn btn-small" onclick="currentGame=\'snake\';loadGame()">🔄 重开</button></div>';
+const canvas=document.getElementById('snakeCanvas');
+const ctx=canvas.getContext('2d');
+snakeState={
+canvas,
+ctx,
+size:15,
+cell:20,
+snake:[{x:7,y:7},{x:6,y:7},{x:5,y:7}],
+dir:{x:1,y:0},
+nextDir:{x:1,y:0},
+food:null,
+score:0,
+best,
+speed:150,
+timer:null,
+isOver:false
+};
+snakeState.food=createSnakeFood(snakeState);
+const keyHandler=function(e){
+const dir=getSnakeDirectionByKey(e.key);
+if(!dir||!snakeState)return;
+e.preventDefault();
+queueSnakeTurn(dir);
+};
+document.addEventListener('keydown',keyHandler);
+document.getElementById('snakeControls').addEventListener('click',function(e){
+const btn=e.target.closest('[data-dir]');
+if(!btn||!snakeState)return;
+queueSnakeTurn(snakeDirections[btn.dataset.dir]);
+});
+startSnakeLoop();
+drawSnake();
+const state=snakeState;
+addGameCleanup(function(){
+clearInterval(state.timer);
+document.removeEventListener('keydown',keyHandler);
+if(snakeState===state)snakeState=null;
+});
+}
+function getSnakeDirectionByKey(key){
+if(key==='ArrowUp'||key==='w'||key==='W')return snakeDirections.up;
+if(key==='ArrowDown'||key==='s'||key==='S')return snakeDirections.down;
+if(key==='ArrowLeft'||key==='a'||key==='A')return snakeDirections.left;
+if(key==='ArrowRight'||key==='d'||key==='D')return snakeDirections.right;
+return null;
+}
+function queueSnakeTurn(dir){
+if(!snakeState||snakeState.isOver)return;
+const activeDir=snakeState.nextDir;
+if(dir.x===-activeDir.x&&dir.y===-activeDir.y)return;
+snakeState.nextDir={x:dir.x,y:dir.y};
+}
+function startSnakeLoop(){
+if(!snakeState)return;
+clearInterval(snakeState.timer);
+snakeState.timer=setInterval(stepSnake,snakeState.speed);
+document.getElementById('snakeSpeed').textContent=snakeState.speed;
+}
+function createSnakeFood(state){
+let x=0,y=0;
+do{
+x=Math.floor(Math.random()*state.size);
+y=Math.floor(Math.random()*state.size);
+}while(state.snake.some(seg=>seg.x===x&&seg.y===y));
+return{x,y,emoji:snakeFoods[Math.floor(Math.random()*snakeFoods.length)]};
+}
+function stepSnake(){
+const state=snakeState;
+if(!state||state.isOver)return;
+state.dir={x:state.nextDir.x,y:state.nextDir.y};
+const head={x:state.snake[0].x+state.dir.x,y:state.snake[0].y+state.dir.y};
+const willEat=head.x===state.food.x&&head.y===state.food.y;
+const collisionBody=willEat?state.snake:state.snake.slice(0,-1);
+if(head.x<0||head.x>=state.size||head.y<0||head.y>=state.size||collisionBody.some(seg=>seg.x===head.x&&seg.y===head.y)){
+endSnake();
+return;
+}
+state.snake.unshift(head);
+if(willEat){
+const eatenEmoji=state.food.emoji;
+state.score++;
+document.getElementById('snakeScore').textContent=state.score;
+if(state.score>state.best){
+state.best=state.score;
+localStorage.setItem('snakeBest',state.best);
+document.getElementById('snakeBest').textContent=state.best;
+}
+if(state.score%5===0&&state.speed>60){
+state.speed=Math.max(60,state.speed-10);
+startSnakeLoop();
+}
+state.food=createSnakeFood(state);
+document.getElementById('snakeInfo').textContent='吃到了 '+eatenEmoji+'！继续冲，方向键和按钮都能操作。';
+}else{
+state.snake.pop();
+}
+drawSnake();
+}
+function endSnake(){
+if(!snakeState)return;
+snakeState.isOver=true;
+clearInterval(snakeState.timer);
+document.getElementById('snakeInfo').innerHTML='💥 撞到了！本局得分 <b>'+snakeState.score+'</b>，点“重开”继续。';
+}
+function drawSnake(){
+if(!snakeState)return;
+const state=snakeState;
+const ctx=state.ctx;
+ctx.clearRect(0,0,state.canvas.width,state.canvas.height);
+ctx.fillStyle='#0b1220';
+ctx.fillRect(0,0,state.canvas.width,state.canvas.height);
+ctx.strokeStyle='rgba(255,255,255,0.05)';
+for(let i=0;i<=state.size;i++){
+const pos=i*state.cell;
+ctx.beginPath();
+ctx.moveTo(pos,0);
+ctx.lineTo(pos,state.canvas.height);
+ctx.stroke();
+ctx.beginPath();
+ctx.moveTo(0,pos);
+ctx.lineTo(state.canvas.width,pos);
+ctx.stroke();
+}
+const foodX=state.food.x*state.cell;
+const foodY=state.food.y*state.cell;
+fillRoundRect(ctx,foodX+3,foodY+3,state.cell-6,state.cell-6,6,'rgba(248,113,113,0.14)');
+ctx.font='16px "Segoe UI Emoji","Apple Color Emoji","Noto Color Emoji",sans-serif';
+ctx.textAlign='center';
+ctx.textBaseline='middle';
+ctx.fillText(state.food.emoji,foodX+state.cell/2,foodY+state.cell/2+1);
+state.snake.forEach(function(seg,index){
+const segX=seg.x*state.cell;
+const segY=seg.y*state.cell;
+fillRoundRect(ctx,segX+2,segY+2,state.cell-4,state.cell-4,7,index===0?'#facc15':'#fb923c');
+});
+}
+function fillRoundRect(ctx,x,y,w,h,r,color){
+ctx.fillStyle=color;
+ctx.beginPath();
+ctx.moveTo(x+r,y);
+ctx.arcTo(x+w,y,x+w,y+h,r);
+ctx.arcTo(x+w,y+h,x,y+h,r);
+ctx.arcTo(x,y+h,x,y,r);
+ctx.arcTo(x,y,x+w,y,r);
+ctx.closePath();
+ctx.fill();
+}
+function clamp(v,min,max){return Math.max(min,Math.min(max,v));}
+function getCanvasPoint(canvas,event){
+const rect=canvas.getBoundingClientRect();
+const source=event.touches&&event.touches[0]?event.touches[0]:event.changedTouches&&event.changedTouches[0]?event.changedTouches[0]:event;
+return{
+x:(source.clientX-rect.left)*(canvas.width/rect.width),
+y:(source.clientY-rect.top)*(canvas.height/rect.height)
+};
+}
+let mineState=null;
+function initMine(){
+const area=document.getElementById('gameArea');
+area.innerHTML='<h3>💣 迷你扫雷</h3><div class="game-info" id="mineInfo">点击翻开，右键或长按 0.5 秒标旗</div><div class="score-bar"><div class="score-item"><div class="val" id="mineFlags">0/10</div><div class="lbl">旗子</div></div><div class="score-item"><div class="val" id="mineSafe">0/54</div><div class="lbl">安全格</div></div><div class="score-item"><div class="val" id="mineMines">10</div><div class="lbl">剩余雷</div></div></div><div class="mine-grid" id="mineGrid"></div><div style="text-align:center;margin-top:16px"><button class="btn btn-small" onclick="currentGame=\'mine\';loadGame()">🔄 重开</button></div>';
+mineState={
+size:8,
+mines:10,
+cells:Array.from({length:64},()=>({mine:false,count:0,revealed:false,flagged:false})),
+opened:0,
+flags:0,
+over:false,
+holdTimer:null,
+suppressClick:false
+};
+placeMines();
+renderMineBoard();
+const grid=document.getElementById('mineGrid');
+grid.onclick=function(e){
+const idx=getMineIndex(e.target);
+if(idx<0||!mineState||mineState.over)return;
+if(mineState.suppressClick){mineState.suppressClick=false;return;}
+revealMineCell(idx);
+};
+grid.oncontextmenu=function(e){
+const idx=getMineIndex(e.target);
+if(idx<0||!mineState||mineState.over)return;
+e.preventDefault();
+toggleMineFlag(idx);
+};
+grid.onpointerdown=function(e){
+const idx=getMineIndex(e.target);
+if(idx<0||!mineState||mineState.over)return;
+clearMineHold();
+mineState.holdTimer=setTimeout(function(){
+if(!mineState||mineState.over)return;
+mineState.suppressClick=true;
+toggleMineFlag(idx);
+},500);
+};
+grid.onpointerup=clearMineHold;
+grid.onpointerleave=clearMineHold;
+grid.onpointercancel=clearMineHold;
+const state=mineState;
+addGameCleanup(function(){
+clearMineHold();
+if(mineState===state)mineState=null;
+});
+}
+function clearMineHold(){
+if(mineState&&mineState.holdTimer){
+clearTimeout(mineState.holdTimer);
+mineState.holdTimer=null;
+}
+}
+function getMineIndex(target){
+const cell=target.closest('.mine-cell');
+return cell?parseInt(cell.dataset.index):-1;
+}
+function placeMines(){
+if(!mineState)return;
+let placed=0;
+while(placed<mineState.mines){
+const idx=Math.floor(Math.random()*mineState.cells.length);
+if(mineState.cells[idx].mine)continue;
+mineState.cells[idx].mine=true;
+placed++;
+}
+mineState.cells.forEach(function(cell,idx){
+if(cell.mine)return;
+cell.count=getMineNeighbors(idx).filter(function(n){return mineState.cells[n].mine;}).length;
+});
+}
+function getMineNeighbors(index){
+const row=Math.floor(index/mineState.size);
+const col=index%mineState.size;
+const result=[];
+for(let dr=-1;dr<=1;dr++){
+for(let dc=-1;dc<=1;dc++){
+if(dr===0&&dc===0)continue;
+const nr=row+dr;
+const nc=col+dc;
+if(nr<0||nr>=mineState.size||nc<0||nc>=mineState.size)continue;
+result.push(nr*mineState.size+nc);
+}
+}
+return result;
+}
+function renderMineBoard(){
+if(!mineState)return;
+document.getElementById('mineGrid').innerHTML=mineState.cells.map(function(cell,idx){
+let cls='mine-cell';
+let text='';
+let countAttr='';
+if(cell.revealed){
+cls+=' revealed';
+if(cell.mine){
+cls+=' mine';
+text='💣';
+}else if(cell.count){
+text=cell.count;
+countAttr=' data-count="'+cell.count+'"';
+}
+}else if(cell.flagged){
+cls+=' flagged';
+text='🚩';
+}
+return '<button class="'+cls+'" type="button" data-index="'+idx+'"'+countAttr+'>'+text+'</button>';
+}).join('');
+document.getElementById('mineFlags').textContent=mineState.flags+'/'+mineState.mines;
+document.getElementById('mineSafe').textContent=mineState.opened+'/'+(mineState.cells.length-mineState.mines);
+document.getElementById('mineMines').textContent=Math.max(mineState.mines-mineState.flags,0);
+}
+function toggleMineFlag(index){
+const cell=mineState&&mineState.cells[index];
+if(!cell||cell.revealed)return;
+cell.flagged=!cell.flagged;
+mineState.flags+=cell.flagged?1:-1;
+document.getElementById('mineInfo').textContent=cell.flagged?'🚩 已标记这个格子':'继续翻格，别踩雷';
+renderMineBoard();
+}
+function revealMineCell(index){
+const cell=mineState&&mineState.cells[index];
+if(!cell||cell.revealed||cell.flagged)return;
+if(cell.mine){
+cell.revealed=true;
+mineState.cells.forEach(function(item){if(item.mine)item.revealed=true;});
+mineState.over=true;
+renderMineBoard();
+document.getElementById('mineInfo').innerHTML='💥 踩雷了！安全格已打开 <b>'+mineState.opened+'</b> 个';
+return;
+}
+const stack=[index];
+while(stack.length){
+const current=stack.pop();
+const currentCell=mineState.cells[current];
+if(currentCell.revealed||currentCell.flagged||currentCell.mine)continue;
+currentCell.revealed=true;
+mineState.opened++;
+if(currentCell.count===0){
+getMineNeighbors(current).forEach(function(next){
+const nextCell=mineState.cells[next];
+if(!nextCell.revealed&&!nextCell.flagged&&!nextCell.mine)stack.push(next);
+});
+}
+}
+renderMineBoard();
+if(mineState.opened===mineState.cells.length-mineState.mines){
+mineState.over=true;
+document.getElementById('mineInfo').innerHTML='🎉 扫雷成功！你找出了全部 <b>54</b> 个安全格';
+return;
+}
+document.getElementById('mineInfo').textContent='继续找安全格，右键或长按可以插旗';
+}
+let runnerState=null;
+const runnerObstacles=['🌵','🪨','📦','🗑️'];
+function initRunner(){
+const best=parseInt(localStorage.getItem('runnerBest')||'0');
+const area=document.getElementById('gameArea');
+area.innerHTML='<h3>🏃 跳跳小人</h3><div class="game-info" id="runnerInfo">点击画布或按空格跳跃，躲开障碍物</div><div class="score-bar"><div class="score-item"><div class="val" id="runnerScore">0</div><div class="lbl">得分</div></div><div class="score-item"><div class="val" id="runnerBest">'+best+'</div><div class="lbl">最高</div></div><div class="score-item"><div class="val" id="runnerSpeed">220</div><div class="lbl">速度</div></div></div><div class="canvas-wrap"><canvas class="game-canvas" id="runnerCanvas" width="560" height="200" aria-label="跳跳小人游戏画布"></canvas></div><div style="text-align:center;margin-top:16px"><button class="btn btn-game" id="runnerBtn" onclick="startRunner()">▶ 开始跑酷</button></div>';
+const canvas=document.getElementById('runnerCanvas');
+runnerState={
+canvas,
+ctx:canvas.getContext('2d'),
+ground:158,
+playerX:84,
+playerY:158,
+playerSize:34,
+vy:0,
+gravity:1160,
+jumpPower:-470,
+obstacles:[],
+spawnIn:0.9,
+elapsed:0,
+score:0,
+best,
+speed:220,
+running:false,
+over:false,
+raf:0,
+lastTs:0
+};
+const jumpHandler=function(e){
+if((e.code==='Space'||e.code==='ArrowUp')&&runnerState){
+e.preventDefault();
+handleRunnerJump();
+}
+};
+document.addEventListener('keydown',jumpHandler);
+canvas.onclick=function(){handleRunnerJump();};
+canvas.ontouchstart=function(e){e.preventDefault();handleRunnerJump();};
+drawRunnerScene();
+const state=runnerState;
+addGameCleanup(function(){
+cancelAnimationFrame(state.raf);
+document.removeEventListener('keydown',jumpHandler);
+if(runnerState===state)runnerState=null;
+});
+}
+function startRunner(){
+if(!runnerState)return;
+runnerState.obstacles=[];
+runnerState.spawnIn=0.9;
+runnerState.elapsed=0;
+runnerState.score=0;
+runnerState.speed=220;
+runnerState.playerY=runnerState.ground;
+runnerState.vy=0;
+runnerState.running=true;
+runnerState.over=false;
+runnerState.lastTs=0;
+document.getElementById('runnerScore').textContent='0';
+document.getElementById('runnerSpeed').textContent='220';
+document.getElementById('runnerInfo').textContent='冲刺开始！点击画布或按空格起跳';
+document.getElementById('runnerBtn').textContent='🏃 跑酷中';
+cancelAnimationFrame(runnerState.raf);
+runnerState.raf=requestAnimationFrame(runnerLoop);
+drawRunnerScene();
+}
+function handleRunnerJump(){
+if(!runnerState)return;
+if(!runnerState.running||runnerState.over){startRunner();return;}
+if(runnerState.playerY>=runnerState.ground-1)runnerState.vy=runnerState.jumpPower;
+}
+function runnerLoop(ts){
+if(!runnerState||!runnerState.running)return;
+if(!runnerState.lastTs){
+runnerState.lastTs=ts;
+runnerState.raf=requestAnimationFrame(runnerLoop);
+return;
+}
+const dt=Math.min(0.03,(ts-runnerState.lastTs)/1000);
+runnerState.lastTs=ts;
+updateRunnerFrame(dt);
+if(!runnerState||!runnerState.running)return;
+runnerState.raf=requestAnimationFrame(runnerLoop);
+}
+function updateRunnerFrame(dt){
+if(!runnerState||!runnerState.running)return;
+runnerState.elapsed+=dt;
+runnerState.speed=Math.min(420,220+runnerState.elapsed*18);
+runnerState.score=Math.floor(runnerState.elapsed*10);
+runnerState.vy+=runnerState.gravity*dt;
+runnerState.playerY=Math.min(runnerState.ground,runnerState.playerY+runnerState.vy*dt);
+if(runnerState.playerY>=runnerState.ground)runnerState.vy=0;
+runnerState.spawnIn-=dt;
+if(runnerState.spawnIn<=0){
+runnerState.obstacles.push({
+x:runnerState.canvas.width+36,
+width:34+Math.random()*10,
+height:24+Math.random()*22,
+emoji:runnerObstacles[Math.floor(Math.random()*runnerObstacles.length)]
+});
+runnerState.spawnIn=Math.max(0.55,1.2-runnerState.score/140)+Math.random()*0.45;
+}
+runnerState.obstacles.forEach(function(obstacle){
+obstacle.x-=runnerState.speed*dt;
+});
+runnerState.obstacles=runnerState.obstacles.filter(function(obstacle){
+return obstacle.x+obstacle.width>-40;
+});
+document.getElementById('runnerScore').textContent=runnerState.score;
+document.getElementById('runnerSpeed').textContent=Math.round(runnerState.speed);
+if(checkRunnerCollision()){
+endRunnerGame();
+return;
+}
+drawRunnerScene();
+}
+function checkRunnerCollision(){
+const playerBox={x:runnerState.playerX-14,y:runnerState.playerY-30,width:28,height:30};
+return runnerState.obstacles.some(function(obstacle){
+const obstacleBox={x:obstacle.x,y:runnerState.ground-obstacle.height,width:obstacle.width,height:obstacle.height};
+return playerBox.x<obstacleBox.x+obstacleBox.width&&playerBox.x+playerBox.width>obstacleBox.x&&playerBox.y<obstacleBox.y+obstacleBox.height&&playerBox.y+playerBox.height>obstacleBox.y;
+});
+}
+function drawRunnerScene(){
+if(!runnerState)return;
+const ctx=runnerState.ctx;
+ctx.clearRect(0,0,runnerState.canvas.width,runnerState.canvas.height);
+const sky=ctx.createLinearGradient(0,0,0,runnerState.canvas.height);
+sky.addColorStop(0,'#1e293b');
+sky.addColorStop(1,'#0f172a');
+ctx.fillStyle=sky;
+ctx.fillRect(0,0,runnerState.canvas.width,runnerState.canvas.height);
+ctx.strokeStyle='rgba(250,204,21,0.8)';
+ctx.lineWidth=3;
+ctx.beginPath();
+ctx.moveTo(0,runnerState.ground+14);
+ctx.lineTo(runnerState.canvas.width,runnerState.ground+14);
+ctx.stroke();
+ctx.fillStyle='rgba(250,204,21,0.18)';
+ctx.fillRect(0,runnerState.ground+14,runnerState.canvas.width,runnerState.canvas.height-runnerState.ground-14);
+ctx.font='30px "Segoe UI Emoji","Apple Color Emoji","Noto Color Emoji",sans-serif';
+ctx.textAlign='center';
+ctx.textBaseline='alphabetic';
+ctx.fillText('🏃',runnerState.playerX,runnerState.playerY);
+ctx.font='28px "Segoe UI Emoji","Apple Color Emoji","Noto Color Emoji",sans-serif';
+runnerState.obstacles.forEach(function(obstacle){
+ctx.fillText(obstacle.emoji,obstacle.x+obstacle.width/2,runnerState.ground+2);
+});
+if(!runnerState.running){
+ctx.fillStyle='rgba(255,255,255,0.08)';
+ctx.fillRect(0,0,runnerState.canvas.width,runnerState.canvas.height);
+ctx.fillStyle='#facc15';
+ctx.font='20px "PingFang SC","Microsoft YaHei",sans-serif';
+ctx.fillText('点击开始后一路向前冲',runnerState.canvas.width/2,92);
+}
+}
+function endRunnerGame(){
+runnerState.running=false;
+runnerState.over=true;
+cancelAnimationFrame(runnerState.raf);
+if(runnerState.score>runnerState.best){
+runnerState.best=runnerState.score;
+localStorage.setItem('runnerBest',runnerState.best);
+document.getElementById('runnerBest').textContent=runnerState.best;
+}
+document.getElementById('runnerInfo').innerHTML='💥 撞到障碍了！本局得分 <b>'+runnerState.score+'</b>';
+document.getElementById('runnerBtn').textContent='🔄 再跑一局';
+drawRunnerScene();
+}
+let breakoutState=null;
+const breakoutColors=['#38bdf8','#34d399','#facc15','#fb7185','#c084fc'];
+function initBreakout(){
+const best=parseInt(localStorage.getItem('breakoutBest')||'0');
+const area=document.getElementById('gameArea');
+area.innerHTML='<h3>🏓 弹球打砖块</h3><div class="game-info" id="breakoutInfo">移动挡板接球，点击画布发球</div><div class="score-bar"><div class="score-item"><div class="val" id="breakoutScore">0</div><div class="lbl">得分</div></div><div class="score-item"><div class="val" id="breakoutLives">3</div><div class="lbl">生命</div></div><div class="score-item"><div class="val" id="breakoutBest">'+best+'</div><div class="lbl">最高</div></div></div><div class="canvas-wrap"><canvas class="game-canvas" id="breakoutCanvas" width="560" height="360" aria-label="弹球打砖块游戏画布"></canvas></div><div class="breakout-tip">鼠标或手指移动挡板，点击画布发球。清空 5x8 砖块就获胜。</div><div style="text-align:center;margin-top:16px"><button class="btn btn-small" onclick="currentGame=\'breakout\';loadGame()">🔄 重开</button></div>';
+const canvas=document.getElementById('breakoutCanvas');
+breakoutState={
+canvas,
+ctx:canvas.getContext('2d'),
+paddleX:280,
+paddleWidth:96,
+paddleHeight:14,
+paddleY:320,
+ball:{x:280,y:308,vx:0,vy:0,radius:7,locked:true},
+bricks:createBreakoutBricks(),
+score:0,
+lives:3,
+best,
+over:false,
+won:false,
+raf:0,
+lastTs:0
+};
+const movePaddle=function(e){
+if(!breakoutState)return;
+if(e.cancelable)e.preventDefault();
+const point=getCanvasPoint(canvas,e);
+breakoutState.paddleX=clamp(point.x,breakoutState.paddleWidth/2,canvas.width-breakoutState.paddleWidth/2);
+if(breakoutState.ball.locked)positionBreakoutBall();
+};
+canvas.onmousemove=movePaddle;
+canvas.ontouchstart=movePaddle;
+canvas.ontouchmove=movePaddle;
+canvas.onclick=function(){launchBreakoutBall();};
+canvas.ontouchend=function(e){if(e.cancelable)e.preventDefault();launchBreakoutBall();};
+positionBreakoutBall();
+drawBreakoutScene();
+breakoutState.raf=requestAnimationFrame(breakoutLoop);
+const state=breakoutState;
+addGameCleanup(function(){
+cancelAnimationFrame(state.raf);
+if(breakoutState===state)breakoutState=null;
+});
+}
+function createBreakoutBricks(){
+const bricks=[];
+const brickWidth=59;
+const brickHeight=20;
+const gap=8;
+for(let row=0;row<5;row++){
+for(let col=0;col<8;col++){
+bricks.push({
+x:18+col*(brickWidth+gap),
+y:48+row*(brickHeight+gap),
+width:brickWidth,
+height:brickHeight,
+color:breakoutColors[row],
+alive:true
+});
+}
+}
+return bricks;
+}
+function positionBreakoutBall(){
+if(!breakoutState)return;
+breakoutState.ball.x=breakoutState.paddleX;
+breakoutState.ball.y=breakoutState.paddleY-breakoutState.ball.radius-4;
+}
+function launchBreakoutBall(){
+if(!breakoutState||breakoutState.over||breakoutState.won||!breakoutState.ball.locked)return;
+breakoutState.ball.locked=false;
+breakoutState.ball.vx=(Math.random()*160)-80;
+breakoutState.ball.vy=-260;
+document.getElementById('breakoutInfo').textContent='球已发出，别漏接！';
+}
+function breakoutLoop(ts){
+if(!breakoutState)return;
+if(!breakoutState.lastTs){
+breakoutState.lastTs=ts;
+drawBreakoutScene();
+breakoutState.raf=requestAnimationFrame(breakoutLoop);
+return;
+}
+const dt=Math.min(0.03,(ts-breakoutState.lastTs)/1000);
+breakoutState.lastTs=ts;
+if(!breakoutState.over&&!breakoutState.won){
+updateBreakoutBall(dt);
+}
+drawBreakoutScene();
+if(!breakoutState.over&&!breakoutState.won){
+breakoutState.raf=requestAnimationFrame(breakoutLoop);
+}
+}
+function updateBreakoutBall(dt){
+if(!breakoutState)return;
+const ball=breakoutState.ball;
+if(ball.locked){positionBreakoutBall();return;}
+const prevX=ball.x;
+const prevY=ball.y;
+ball.x+=ball.vx*dt;
+ball.y+=ball.vy*dt;
+if(ball.x-ball.radius<=0){
+ball.x=ball.radius;
+ball.vx=Math.abs(ball.vx);
+}
+if(ball.x+ball.radius>=breakoutState.canvas.width){
+ball.x=breakoutState.canvas.width-ball.radius;
+ball.vx=-Math.abs(ball.vx);
+}
+if(ball.y-ball.radius<=0){
+ball.y=ball.radius;
+ball.vy=Math.abs(ball.vy);
+}
+const paddleLeft=breakoutState.paddleX-breakoutState.paddleWidth/2;
+const paddleRight=breakoutState.paddleX+breakoutState.paddleWidth/2;
+if(ball.vy>0&&ball.y+ball.radius>=breakoutState.paddleY&&ball.y+ball.radius<=breakoutState.paddleY+breakoutState.paddleHeight&&ball.x>=paddleLeft&&ball.x<=paddleRight){
+ball.y=breakoutState.paddleY-ball.radius;
+ball.vy=-Math.max(230,Math.abs(ball.vy));
+ball.vx=((ball.x-breakoutState.paddleX)/(breakoutState.paddleWidth/2))*260;
+}
+for(let i=0;i<breakoutState.bricks.length;i++){
+const brick=breakoutState.bricks[i];
+if(!brick.alive)continue;
+if(ballHitsBrick(ball,brick)){
+brick.alive=false;
+breakoutState.score++;
+document.getElementById('breakoutScore').textContent=breakoutState.score;
+if(breakoutState.score>breakoutState.best){
+breakoutState.best=breakoutState.score;
+localStorage.setItem('breakoutBest',breakoutState.best);
+document.getElementById('breakoutBest').textContent=breakoutState.best;
+}
+if(prevY+ball.radius<=brick.y||prevY-ball.radius>=brick.y+brick.height){
+ball.vy*=-1;
+}else{
+ball.vx*=-1;
+}
+document.getElementById('breakoutInfo').textContent='击碎一块砖！继续保持节奏';
+break;
+}
+}
+if(breakoutState.bricks.every(function(brick){return !brick.alive;})){
+breakoutState.won=true;
+ball.locked=true;
+document.getElementById('breakoutInfo').innerHTML='🎉 全部砖块清空了！得分 <b>'+breakoutState.score+'</b>';
+return;
+}
+if(ball.y-ball.radius>breakoutState.canvas.height){
+breakoutState.lives--;
+document.getElementById('breakoutLives').textContent=breakoutState.lives;
+if(breakoutState.lives<=0){
+breakoutState.over=true;
+ball.locked=true;
+document.getElementById('breakoutInfo').innerHTML='💥 三条命都用完了，本局得分 <b>'+breakoutState.score+'</b>';
+}else{
+ball.locked=true;
+ball.vx=0;
+ball.vy=0;
+positionBreakoutBall();
+document.getElementById('breakoutInfo').textContent='掉球了，还剩 '+breakoutState.lives+' 条命，点击画布继续';
+}
+}
+}
+function ballHitsBrick(ball,brick){
+const nearestX=clamp(ball.x,brick.x,brick.x+brick.width);
+const nearestY=clamp(ball.y,brick.y,brick.y+brick.height);
+const dx=ball.x-nearestX;
+const dy=ball.y-nearestY;
+return dx*dx+dy*dy<=ball.radius*ball.radius;
+}
+function drawBreakoutScene(){
+if(!breakoutState)return;
+const ctx=breakoutState.ctx;
+ctx.clearRect(0,0,breakoutState.canvas.width,breakoutState.canvas.height);
+const bg=ctx.createLinearGradient(0,0,0,breakoutState.canvas.height);
+bg.addColorStop(0,'#111827');
+bg.addColorStop(1,'#020617');
+ctx.fillStyle=bg;
+ctx.fillRect(0,0,breakoutState.canvas.width,breakoutState.canvas.height);
+breakoutState.bricks.forEach(function(brick){
+if(!brick.alive)return;
+fillRoundRect(ctx,brick.x,brick.y,brick.width,brick.height,6,brick.color);
+});
+ctx.fillStyle='#facc15';
+fillRoundRect(ctx,breakoutState.paddleX-breakoutState.paddleWidth/2,breakoutState.paddleY,breakoutState.paddleWidth,breakoutState.paddleHeight,8,'#facc15');
+ctx.beginPath();
+ctx.fillStyle='#ffffff';
+ctx.arc(breakoutState.ball.x,breakoutState.ball.y,breakoutState.ball.radius,0,Math.PI*2);
+ctx.fill();
+if(breakoutState.ball.locked&&!breakoutState.over&&!breakoutState.won){
+ctx.strokeStyle='rgba(255,255,255,0.25)';
+ctx.setLineDash([6,6]);
+ctx.beginPath();
+ctx.moveTo(breakoutState.ball.x,breakoutState.ball.y);
+ctx.lineTo(breakoutState.ball.x,breakoutState.ball.y-80);
+ctx.stroke();
+ctx.setLineDash([]);
+}
+}
+
+// ============ GUESS NUMBER ============
+let guessAnswer,guessCount,guessOver;
+function initGuess(){
+guessAnswer=Math.floor(Math.random()*100)+1;
+guessCount=0;guessOver=false;
+const best=localStorage.getItem('gBest')||'---';
+const a=document.getElementById('gameArea');
+a.innerHTML='<h3>🔢 猜数字</h3><div class="game-info" id="gInfo">我心里想了一个1~100的数字，猜猜看？</div><div class="score-bar"><div class="score-item"><div class="val" id="gCount">0</div><div class="lbl">次数</div></div><div class="score-item"><div class="val" id="gBest">'+best+'</div><div class="lbl">最少次数</div></div></div><div style="text-align:center"><input type="number" class="guess-input" id="gInput" min="1" max="100" placeholder="?"><div style="margin-top:14px"><button class="btn btn-game" onclick="doGuess()">猜！</button></div><div class="guess-history" id="gHistory"></div><div style="margin-top:16px"><button class="btn btn-small" onclick="initGuess()">🔄 重开</button></div></div>';
+document.getElementById('gInput').addEventListener('keydown',function(e){if(e.key==='Enter')doGuess();});
+document.getElementById('gInput').focus();
+}
+function doGuess(){
+if(guessOver)return;
+const input=document.getElementById('gInput');
+const v=parseInt(input.value);
+if(isNaN(v)||v<1||v>100){document.getElementById('gInfo').textContent='请输入1~100的数字哦~';return;}
+guessCount++;document.getElementById('gCount').textContent=guessCount;
+const hist=document.getElementById('gHistory');
+if(v===guessAnswer){
+  guessOver=true;
+  hist.innerHTML+='<span class="guess-tag hit">'+v+' ✅</span>';
+  const msgs=['你太聪明了！','厉害厉害！🎉','就知道你行！💕','天才女友！✨'];
+  document.getElementById('gInfo').innerHTML='🎉 '+msgs[Math.floor(Math.random()*msgs.length)]+' 用了 <b>'+guessCount+'</b> 次猜中！';
+  const b=localStorage.getItem('gBest');
+  if(!b||guessCount<parseInt(b)){localStorage.setItem('gBest',guessCount);document.getElementById('gBest').textContent=guessCount;document.getElementById('gInfo').innerHTML+=' 新纪录！';}
+}else if(v>guessAnswer){
+  hist.innerHTML+='<span class="guess-tag high">'+v+' ⬇️</span>';
+  document.getElementById('gInfo').textContent='大了大了~ 再小一点';
+}else{
+  hist.innerHTML+='<span class="guess-tag low">'+v+' ⬆️</span>';
+  document.getElementById('gInfo').textContent='小了小了~ 再大一点';
+}
+input.value='';input.focus();
+}
+
+// ============ SIMON (颜色记忆) ============
+let simonSeq=[],simonIdx=0,simonRound=0,simonLocked=false,simonPlayback=false;
+function initSimon(){
+simonSeq=[];simonRound=0;simonLocked=false;simonPlayback=false;
+const best=localStorage.getItem('sBest')||'0';
+const a=document.getElementById('gameArea');
+a.innerHTML='<h3>🎨 颜色记忆</h3><div class="game-info" id="sInfo">记住颜色顺序，然后按顺序点击</div><div class="score-bar"><div class="score-item"><div class="val" id="sRound">0</div><div class="lbl">轮数</div></div><div class="score-item"><div class="val" id="sBest">'+best+'</div><div class="lbl">最高</div></div></div><div class="simon-grid" id="sGrid"><div class="simon-btn" data-c="0"></div><div class="simon-btn" data-c="1"></div><div class="simon-btn" data-c="2"></div><div class="simon-btn" data-c="3"></div></div><div style="text-align:center;margin-top:16px"><button class="btn btn-game" id="sBtn" onclick="simonNextRound()">▶ 开始</button></div>';
+document.getElementById('sGrid').onclick=function(e){
+  const b=e.target.closest('.simon-btn');
+  if(!b||simonLocked||simonPlayback)return;
+  const c=parseInt(b.dataset.c);
+  flashSimon(c,200);
+  if(c===simonSeq[simonIdx]){
+    simonIdx++;
+    if(simonIdx===simonSeq.length){
+      simonLocked=true;
+      document.getElementById('sInfo').textContent='✅ 太棒了！准备下一轮...';
+      setTimeout(()=>simonNextRound(),1000);
+    }
+  }else{
+    simonLocked=true;
+    document.getElementById('sInfo').innerHTML='❌ 错了！坚持了 <b>'+simonRound+'</b> 轮';
+    document.getElementById('sBtn').textContent='🔄 重来';
+    document.getElementById('sBtn').onclick=function(){initSimon();};
+    const best=parseInt(localStorage.getItem('sBest')||'0');
+    if(simonRound>best){localStorage.setItem('sBest',simonRound);document.getElementById('sBest').textContent=simonRound;document.getElementById('sInfo').innerHTML+=' 🎉 新纪录！';}
+    simonSeq=[];simonRound=0;
+  }
+};
+}
+function simonNextRound(){
+simonRound++;simonIdx=0;simonLocked=true;simonPlayback=true;
+document.getElementById('sRound').textContent=simonRound;
+document.getElementById('sBtn').style.display='none';
+simonSeq.push(Math.floor(Math.random()*4));
+document.getElementById('sInfo').textContent='👀 看好了...';
+let i=0;
+const iv=setInterval(()=>{
+  if(i>=simonSeq.length){clearInterval(iv);simonLocked=false;simonPlayback=false;document.getElementById('sInfo').textContent='轮到你了！按顺序点击';return;}
+  flashSimon(simonSeq[i],400);i++;
+},600);
+}
+function flashSimon(c,dur){
+const btns=document.querySelectorAll('.simon-btn');
+btns[c].classList.add('lit');
+setTimeout(()=>btns[c].classList.remove('lit'),dur);
+}
+
+// ============ TYPING (情话打字) ============
+const lovePhrases=[
+'想你的时候天都是粉色的',
+'你笑起来真好看',
+'遇见你是最美丽的意外',
+'我的世界因为你而完整',
+'你是我最甜蜜的心事',
+'每天都想见到你',
+'有你的日子格外温暖',
+'我喜欢你超过昨天',
+'和你在一起每天都是情人节',
+'你是我写的最美情书',
+'余生请多指教',
+'你是我的小太阳',
+'想和你一起慢慢变老',
+'全世界我只要你',
+'你的笑容是我的解药',
+];
+let typePhrase='',typePos=0,typeTimer=null,typeTimeLeft=0,typeTotalTime=0,typeCorrect=0,typeTotal=0,typeActive=false;
+function initTyping(){
+typeActive=false;clearInterval(typeTimer);
+const best=localStorage.getItem('tBest')||'---';
+const a=document.getElementById('gameArea');
+a.innerHTML='<h3>✍️ 情话打字</h3><div class="game-info" id="tInfo">限时15秒，尽可能多地打出情话</div><div class="score-bar"><div class="score-item"><div class="val" id="tScore">0</div><div class="lbl">完成句数</div></div><div class="score-item"><div class="val" id="tAcc">100%</div><div class="lbl">准确率</div></div><div class="score-item"><div class="val" id="tBest">'+best+'</div><div class="lbl">最高句数</div></div></div><div class="type-display" id="tDisplay">点击下方开始，打出屏幕上的情话 💕</div><div class="type-timer"><div class="type-timer-bar" id="tBar" style="width:100%"></div></div><input type="text" class="type-input" id="tInput" placeholder="点击开始后在这里打字..." disabled><div style="text-align:center;margin-top:14px"><button class="btn btn-game" id="tBtn" onclick="startTyping()">▶ 开始挑战</button></div>';
+}
+function startTyping(){
+if(typeActive)return;
+typeActive=true;typeCorrect=0;typeTotal=0;
+typeTotalTime=15;typeTimeLeft=typeTotalTime;
+document.getElementById('tScore').textContent=0;
+document.getElementById('tAcc').textContent='100%';
+document.getElementById('tBtn').textContent='挑战中...';
+document.getElementById('tInfo').textContent='快打！⌨️';
+const input=document.getElementById('tInput');
+input.disabled=false;input.value='';input.focus();
+nextTypePhrase();
+typeTimer=setInterval(()=>{
+  typeTimeLeft-=0.1;
+  document.getElementById('tBar').style.width=(typeTimeLeft/typeTotalTime*100)+'%';
+  if(typeTimeLeft<=0){endTyping();}
+},100);
+input.oninput=function(){
+  const v=input.value;
+  const expected=typePhrase.slice(0,v.length);
+  typeTotal++;
+  if(v===typePhrase){
+    typeCorrect+=typePhrase.length;
+    typeTotal=typeTotal-1+typePhrase.length;
+    const count=parseInt(document.getElementById('tScore').textContent)+1;
+    document.getElementById('tScore').textContent=count;
+    input.value='';
+    nextTypePhrase();
+  }else{
+    // 实时高亮
+    let html='';
+    for(let i=0;i<typePhrase.length;i++){
+      if(i<v.length){
+        html+=(v[i]===typePhrase[i])?'<span class="done">'+typePhrase[i]+'</span>':'<span style="color:#ef4444;text-decoration:underline">'+typePhrase[i]+'</span>';
+      }else if(i===v.length){
+        html+='<span class="cur">'+typePhrase[i]+'</span>';
+      }else{
+        html+='<span class="rest">'+typePhrase[i]+'</span>';
+      }
+    }
+    document.getElementById('tDisplay').innerHTML=html;
+  }
+};
+}
+function nextTypePhrase(){
+typePhrase=lovePhrases[Math.floor(Math.random()*lovePhrases.length)];
+typePos=0;
+let html='<span class="cur">'+typePhrase[0]+'</span>';
+for(let i=1;i<typePhrase.length;i++) html+='<span class="rest">'+typePhrase[i]+'</span>';
+document.getElementById('tDisplay').innerHTML=html;
+}
+function endTyping(){
+typeActive=false;clearInterval(typeTimer);
+document.getElementById('tBar').style.width='0%';
+const input=document.getElementById('tInput');
+input.disabled=true;input.oninput=null;
+const count=parseInt(document.getElementById('tScore').textContent);
+const acc=typeTotal>0?Math.round(typeCorrect/typeTotal*100):100;
+document.getElementById('tAcc').textContent=acc+'%';
+const msgs=['手速惊人！','太厉害了！✨','情话达人！💕','打字女王！👑'];
+document.getElementById('tInfo').innerHTML='⏰ 时间到！完成 <b>'+count+'</b> 句情话 '+msgs[Math.min(count,msgs.length-1)];
+document.getElementById('tBtn').textContent='🔄 再来';
+const b=localStorage.getItem('tBest');
+if(!b||count>parseInt(b)){localStorage.setItem('tBest',count);document.getElementById('tBest').textContent=count;document.getElementById('tInfo').innerHTML+=' 🎉 新纪录！';}
+}
+
+// ============ INIT ============
 initMemory();
 window.addEventListener('scroll',()=>{const h=document.documentElement;document.getElementById('progress').style.width=(h.scrollTop/(h.scrollHeight-h.clientHeight))*100+'%';},{passive:true});
 </script>
