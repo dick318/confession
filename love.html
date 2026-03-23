@@ -108,7 +108,7 @@ body{min-height:100vh;background:linear-gradient(135deg,#fdf2f8,#fce7f3,#f5f3ff,
 
   <!-- Countdown -->
   <div class="countdown-card">
-    <h3>⏳ 下次见面 · 2027春节</h3>
+    <h3>⏳ 下次见面倒计时</h3>
     <div class="countdown-numbers">
       <div class="countdown-unit"><div class="val" id="cdD">--</div><div class="lbl">天</div></div>
       <div class="countdown-unit"><div class="val" id="cdH">--</div><div class="lbl">时</div></div>
@@ -219,7 +219,7 @@ reasons.forEach((r, i) => {
 });
 
 // Countdown (set your next meeting date here)
-const nextMeet = new Date('2027-02-06T00:00:00+08:00'); // 2027春节
+const nextMeet = new Date('2026-09-01T00:00:00+08:00'); // 下次见面
 function updateCountdown() {
   const diff = nextMeet - new Date();
   if (diff <= 0) { document.getElementById('cdD').textContent='🎉'; return; }
